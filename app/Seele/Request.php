@@ -1,0 +1,200 @@
+<?php
+// +----------------------------------------------------------------------
+// | Request.php
+// +----------------------------------------------------------------------
+// | Description: Request.php
+// +----------------------------------------------------------------------
+// | Time: 18-9-6 下午2:21
+// +----------------------------------------------------------------------
+// | Author: 小滕<616896861@qq.com>
+// +----------------------------------------------------------------------
+
+namespace App\Seele;
+
+use Exception;
+use GuzzleHttp\Client;
+
+class Request
+{
+
+    public $command;
+
+    public $client;
+
+    public $contractAddress;
+
+    public $user;
+
+    public $amount = 0;
+
+    public $fee;
+
+    public $url;
+
+    public function __construct()
+    {
+        $this->url = config('seele.url');
+        $this->command = config('seele.client_command');
+        $this->client = new Client();
+        $this->contractAddress = config('seele.contract_address');
+        $this->fee = config('seele.fee', 1);
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAmount(): int
+    {
+        return $this->amount;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @param mixed $amount
+     */
+    public function setAmount($amount)
+    {
+        $this->amount = $amount;
+    }
+
+    public function request($code, ...$args)
+    {
+        $payload = '0x'.$code.$this->payloadEncode($args);
+        $data = $this->getRequestParams($payload);
+
+        $response = $this->client->post($this->url, [
+            'headers' => ['Content-Type' => 'application/json'],
+            'body' => json_encode($data),
+        ]);
+
+        if ($response->getStatusCode() != 200) {
+            throw new Exception('接口请求错误');
+        }
+
+        $result = json_decode($response->getBody(), true);
+        if (isset($result['error'])) {
+            throw new Exception($result['error']['message']);
+        }
+
+        return $data;
+    }
+
+    /**
+     * 获取请求参数
+     * @param string $payload
+     * @return array
+     */
+    public function getRequestParams(string $payload)
+    {
+        $params = [
+            'jsonrpc' => '2.0',
+            'method' => 'seele_addTx',
+            'params' => [
+                $this->generateSignature($payload),
+            ],
+            'id' => 1,
+        ];
+        return $params;
+    }
+
+    /**
+     * 获取交易签名
+     * @param string $payload
+     * @return array|mixed
+     * @throws Exception
+     */
+    public function generateSignature(string $payload)
+    {
+        $payload = substr($payload, 0, 2) == '0x' ? $payload : '0x'.$payload;
+        $command = sprintf(
+            "%s sign --privatekey %s --to %s --amount %d --fee %d --payload %s",
+            $this->command,
+            $this->user->getPrivateKey(),
+            $this->contractAddress,
+            $this->amount,
+            $this->fee,
+            $payload
+        );
+        $data = $this->getExecResult($command);
+        unset($data[0]);
+        $data = json_decode(implode('', $data), true);
+        return $data;
+    }
+
+    /**
+     * 通过hash获取本次hash的结果
+     * @param string $hash
+     * @return array|mixed
+     */
+    public function queryHash(string $hash)
+    {
+        $hash = substr($hash, 0, 2) == '0x' ? $hash : '0x'.$hash;
+        $command = sprintf("%s getreceipt --hash %s", $this->command, $hash);
+        $result = $this->getExecResult($command);
+        $result = json_decode(implode('', $result), true);
+        if ($result['failed']) {
+            throw new Exception($result['result']);
+        }
+        return $this->payloadDecode($result['result']);
+    }
+
+    /**
+     * 获取命令行的执行结果
+     * @param $command
+     * @return array|mixed
+     * @throws Exception
+     */
+    public function getExecResult($command)
+    {
+        $result = shell_exec($command);
+        if (! $result) {
+            throw new Exception('获取交易签名失败');
+        }
+        return explode("\n", $result);
+    }
+
+    public function payloadEncode(array $args)
+    {
+        $payload = '';
+        foreach ($args as $arg) {
+            $arg = $this->remove0xPrefix($arg);
+            $payload .= str_pad('', 64 - mb_strlen($arg), '0').$arg;
+        }
+        return $payload;
+    }
+
+    public function payloadDecode(string $payload)
+    {
+        $payload = $this->remove0xPrefix($payload);
+        preg_match_all('/[0-9a-z]{64}/', $payload, $rows);
+        if (!isset($rows[0]) || !$rows[0]) {
+            return [];
+        }
+        $data = [];
+        foreach ($rows[0] as $row) {
+            $data[] = preg_replace('/[0]+/', '', $row);
+        }
+        return $data;
+    }
+
+    protected function remove0xPrefix(string $value)
+    {
+        return substr($value, 0, 2) == '0x' ? substr($value, 2) : $value;
+    }
+
+}
