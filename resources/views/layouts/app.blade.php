@@ -53,6 +53,9 @@
 
                                 <ul class="dropdown-menu">
                                     <li>
+                                        <a href="{{route('home') }}">Dashboard</a>
+                                    </li>
+                                    <li>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -70,6 +73,14 @@
                 </div>
             </div>
         </nav>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    @include('flash::message')
+                </div>
+            </div>
+        </div>
 
         @yield('content')
     </div>
