@@ -16,7 +16,7 @@
             <p>{!! nl2br($product->description) !!}</p>
 
             <p class="text-right">
-                <a href="" class="btn btn-primary">Rental</a>
+                <a href="{{route('rental.apply', $product)}}" class="btn btn-primary">Rental</a>
             </p>
         </div>
     </div>

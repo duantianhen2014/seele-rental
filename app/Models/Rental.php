@@ -18,7 +18,7 @@ class Rental extends Model
     protected $table = 'rentals';
 
     protected $fillable = [
-        'a_user_id', 'b_user_id', 'a_address', 'b_address',
+        'product_id', 'a_user_id', 'b_user_id', 'a_address', 'b_address',
         'status', 'charge', 'deposit', 'reject_reason',
     ];
 

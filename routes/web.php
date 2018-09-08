@@ -26,4 +26,7 @@ Route::group(['prefix' => '/member'], function () {
     Route::get('/products', 'MemberController@products')->name('member.products');
     Route::get('/products/create', 'ProductController@create')->name('product.create');
     Route::post('/products/create', 'ProductController@store');
+
+    Route::get('/rental/product/{id}', 'RentalController@showApplyPage')->name('rental.apply');
+    Route::post('/rental/product/{id}', 'RentalController@applyHandler');
 });

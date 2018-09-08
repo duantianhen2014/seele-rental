@@ -60,9 +60,9 @@ class Seele
         return $this->request->request('fe3b79ce');
     }
 
-    public function bConfirm($address, int $deposit, bool $agree)
+    public function bConfirm($address, int $charge, int $deposit, bool $agree)
     {
-        return $this->request->request('119e9c69', $address, $deposit, $agree ? 1 : 0);
+        return $this->request->request('119e9c69', $address, $deposit, $agree ? 1 : 0, $charge);
     }
 
     public function bComplete($address)
