@@ -65,6 +65,14 @@ class Request
     }
 
     /**
+     * @param int $fee
+     */
+    public function setFee(int $fee)
+    {
+        $this->fee = $fee;
+    }
+
+    /**
      * @param mixed $amount
      */
     public function setAmount($amount)
@@ -145,6 +153,23 @@ class Request
     {
         $hash = substr($hash, 0, 2) == '0x' ? $hash : '0x'.$hash;
         $command = sprintf("%s getreceipt --hash %s", $this->command, $hash);
+        $result = $this->getExecResult($command);
+        $result = json_decode(implode('', $result), true);
+        if ($result['failed']) {
+            throw new Exception($result['result']);
+        }
+        return $this->payloadDecode($result['result']);
+    }
+
+    public function call($method, ...$args)
+    {
+        $payload = '0x'.$method.$this->payloadEncode($args);
+        $command = sprintf(
+            "%s call --height -1 --to %s --payload %s",
+            $this->command,
+            $this->contractAddress,
+            $payload
+        );
         $result = $this->getExecResult($command);
         $result = json_decode(implode('', $result), true);
         if ($result['failed']) {
