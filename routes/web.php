@@ -15,6 +15,7 @@ Route::get('/', 'IndexController@index');
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/product/{id}', 'ProductController@show')->name('product.show');
 
 Route::group(['prefix' => '/member'], function () {
     Route::get('/change_password', 'MemberController@showChangePasswordPage')->name('member.change_password');

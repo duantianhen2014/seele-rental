@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\Auth;
 class ProductController extends Controller
 {
 
+    public function show($id)
+    {
+        $product = Product::findOrFail($id);
+        return view('product.show', compact('product'));
+    }
+
     public function create()
     {
         return view('product.create');
