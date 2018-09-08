@@ -11,7 +11,6 @@
 
 namespace App\Seele;
 
-
 class User
 {
 

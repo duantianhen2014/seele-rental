@@ -80,6 +80,12 @@ class Request
         $this->amount = $amount;
     }
 
+    /**
+     * @param $code
+     * @param mixed ...$args
+     * @return array
+     * @throws Exception
+     */
     public function request($code, ...$args)
     {
         $payload = '0x'.$code.$this->payloadEncode($args);
@@ -103,9 +109,9 @@ class Request
     }
 
     /**
-     * 获取请求参数
      * @param string $payload
      * @return array
+     * @throws Exception
      */
     public function getRequestParams(string $payload)
     {
@@ -145,9 +151,9 @@ class Request
     }
 
     /**
-     * 通过hash获取本次hash的结果
      * @param string $hash
-     * @return array|mixed
+     * @return array
+     * @throws Exception
      */
     public function queryHash(string $hash)
     {
@@ -161,6 +167,12 @@ class Request
         return $this->payloadDecode($result['result']);
     }
 
+    /**
+     * @param $method
+     * @param mixed ...$args
+     * @return array
+     * @throws Exception
+     */
     public function call($method, ...$args)
     {
         $payload = '0x'.$method.$this->payloadEncode($args);
@@ -193,6 +205,10 @@ class Request
         return explode("\n", $result);
     }
 
+    /**
+     * @param array $args
+     * @return string
+     */
     public function payloadEncode(array $args)
     {
         $payload = '';
@@ -203,6 +219,10 @@ class Request
         return $payload;
     }
 
+    /**
+     * @param string $payload
+     * @return array
+     */
     public function payloadDecode(string $payload)
     {
         $payload = $this->remove0xPrefix($payload);
@@ -217,6 +237,10 @@ class Request
         return $data;
     }
 
+    /**
+     * @param string $value
+     * @return bool|string
+     */
     protected function remove0xPrefix(string $value)
     {
         return substr($value, 0, 2) == '0x' ? substr($value, 2) : $value;

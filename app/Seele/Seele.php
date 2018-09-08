@@ -37,9 +37,9 @@ class Seele
         [$address, $charge, $deposit, $aConfirm, $bConfirm, $aCompleteConfirm] = $this->request->call('469e9067', $this->user->address);
         $charge = hexdec($charge);
         $deposit = hexdec($deposit);
-        $aConfirm = (bool) $aConfirm;
-        $bConfirm = (bool) $bConfirm;
-        $aCompleteConfirm = (bool) $aCompleteConfirm;
+        $aConfirm = (bool)$aConfirm;
+        $bConfirm = (bool)$bConfirm;
+        $aCompleteConfirm = (bool)$aCompleteConfirm;
         return compact('address', 'charge', 'deposit', 'aConfirm', 'bConfirm', 'aCompleteConfirm');
     }
 
