@@ -19,6 +19,13 @@
                         <label>Product</label>
                         <input type="text" value="{{$rental->product->title}}" class="form-control" readonly>
                     </div>
+                    <div class="agree-box">
+                        <div class="form-group">
+                            <label>PrivateKey</label>
+                            <input type="text" name="private_key" class="form-control" placeholder="PrivateKey">
+                            <span>Address: <b>{{$rental->a_address}}</b></span>
+                        </div>
+                    </div>
 
                     <div class="form-group">
                         <label>Agree</label>
@@ -26,13 +33,6 @@
                             <option value="1">agree</option>
                             <option value="0">disagree</option>
                         </select>
-                    </div>
-
-                    <div class="agree-box">
-                        <div class="form-group">
-                            <label>PrivateKey</label>
-                            <input type="text" name="private_key" class="form-control" placeholder="PrivateKey">
-                        </div>
                     </div>
 
                     <div class="disagree-box" style="display: none">

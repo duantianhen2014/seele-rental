@@ -9,6 +9,7 @@ use Exception;
 use App\Models\Product;
 use App\Models\Rental;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RentalController extends Controller
 {
@@ -68,15 +69,17 @@ class RentalController extends Controller
         $agree = $request->post('agree', false);
         $rejectReason = $request->post('reject_reason', '');
 
-        if (!$agree) {
-            $rental->status = Rental::STATUS_REJECT;
-            $rental->reject_reason = $rejectReason;
-            $rental->save();
-        }
-
-        $seele = new Seele(new User($address, $privateKey));
-
+        DB::beginTransaction();
         try {
+
+            if (!$agree) {
+                $rental->status = Rental::STATUS_REJECT;
+                $rental->reject_reason = $rejectReason;
+                $rental->save();
+            }
+
+            $seele = new Seele(new User($address, $privateKey));
+
             $data = $seele->bConfirm($address, $charge, $deposit, $agree);
 
             // record
@@ -86,9 +89,12 @@ class RentalController extends Controller
                 'request_type' => HashResult::REQUEST_TYPE_A_CONFIRM,
             ]);
 
+            DB::commit();
+
             flash()->success('apply has submit.please wait.');
             return back();
         } catch (Exception $exception) {
+            DB::rollBack();
             flash()->error($exception->getMessage());
             return back();
         }

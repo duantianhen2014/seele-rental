@@ -30,6 +30,7 @@
                     <div class="form-group">
                         <label>PrivateKey</label>
                         <input type="text" name="private_key" class="form-control" placeholder="PrivateKey">
+                        <span>Address: <b>{{$rental->b_address}}</b></span>
                     </div>
 
                     <div class="form-group">
