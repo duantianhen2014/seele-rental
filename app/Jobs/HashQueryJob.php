@@ -34,11 +34,9 @@ class HashQueryJob implements ShouldQueue
      */
     public function handle()
     {
-        $request = new Request;
-
         DB::beginTransaction();
         try {
-            $result = $request->queryHash($this->hashResult->tx_hash);
+            $result = (new Request)->queryHash($this->hashResult->tx_hash);
 
             $this->hashResult->result = json_encode($result);
             $this->hashResult->save();

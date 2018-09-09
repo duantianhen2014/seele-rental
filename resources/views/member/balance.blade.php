@@ -10,8 +10,21 @@
     </div>
 
     <p>Balance:</p>
+    <form action="" method="get" class="form-horizontal">
+        <div class="form-group">
+            <label>Address</label>
+            <input type="text" name="address" class="form-control">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Query</button>
+        </div>
+    </form>
+    <div class="alert alert-warning">
+        <p>Note:</p>
+        <p>Below data could not correct,because network delay.</p>
+    </div>
     <p class="text-right">
-        <span class="balance" style="font-size: 52px; font-weight: 800;">{{$balance}}</span> seele
+        {{request()->get('address')}}: <span class="balance" style="font-size: 52px; font-weight: 800;">{{$balance}}</span> seele
         <a href="{{route('member.withdraw')}}">Withdraw</a>
     </p>
 
@@ -19,8 +32,8 @@
     <table class="table table-hover">
         <thead>
         <th>ID</th>
-        <th>Before Balance</th>
         <th>Withdraw Money</th>
+        <th>Status</th>
         <th>CreatedAt</th>
         <th>UpdatedAt</th>
         </thead>
@@ -28,14 +41,14 @@
         @forelse($withdrawRecords as $record)
             <tr>
                 <td>{{$record->id}}</td>
-                <td>{{$record->before_balance}}</td>
-                <td>{{$record->money}}</td>
+                <td>{{$record->money}} seele</td>
+                <td>{{$record->statusText()}}</td>
                 <td>{{$record->created_at}}</td>
                 <td>{{$record->updated_at}}</td>
             </tr>
             @empty
             <tr>
-                <td colspan="5" class="text-center">None.</td>
+                <td colspan="4" class="text-center">None.</td>
             </tr>
         @endforelse
         </tbody>

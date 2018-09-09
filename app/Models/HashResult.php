@@ -51,7 +51,12 @@ class HashResult extends Model
 
     public function handlerWithdraw()
     {
-        
+        $withdrawRecord = WithdrawRecords::whereTxHash($this->tx_hash)->first();
+        if (!$withdrawRecord) {
+            return;
+        }
+        $withdrawRecord->status = WithdrawRecords::STATUS_SUCCESS;
+        $withdrawRecord->save();
     }
 
 }

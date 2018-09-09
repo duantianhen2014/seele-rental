@@ -35,6 +35,7 @@ class RentalController extends Controller
             // record
             HashResult::create([
                 'tx_hash' => $data['Hash'],
+                'result' => '',
                 'request_data' => [
                     'product_id' => $product->id,
                     'row' => $data,
@@ -85,6 +86,7 @@ class RentalController extends Controller
             // record
             HashResult::create([
                 'tx_hash' => $data['Hash'],
+                'result' => '',
                 'request_data' => ['row' => $data],
                 'request_type' => HashResult::REQUEST_TYPE_A_CONFIRM,
             ]);
@@ -130,6 +132,7 @@ class RentalController extends Controller
             // record
             HashResult::create([
                 'tx_hash' => $data['Hash'],
+                'result' => '',
                 'request_data' => ['row' => $data],
                 'request_type' => HashResult::REQUEST_TYPE_B_CONFIRM,
             ]);
@@ -163,6 +166,7 @@ class RentalController extends Controller
             // record
             HashResult::create([
                 'tx_hash' => $data['Hash'],
+                'result' => '',
                 'request_data' => ['row' => $data],
                 'request_type' => HashResult::REQUEST_TYPE_A_COMPLETE,
             ]);
@@ -197,6 +201,7 @@ class RentalController extends Controller
             // record
             HashResult::create([
                 'tx_hash' => $data['Hash'],
+                'result' => '',
                 'request_data' => ['row' => $data],
                 'request_type' => HashResult::REQUEST_TYPE_B_COMPLETE,
             ]);

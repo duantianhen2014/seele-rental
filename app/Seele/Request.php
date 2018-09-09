@@ -97,7 +97,7 @@ class Request
         ]);
 
         if ($response->getStatusCode() != 200) {
-            throw new Exception('接口请求错误');
+            throw new Exception('api request error.');
         }
 
         $result = json_decode($response->getBody(), true);
@@ -105,7 +105,7 @@ class Request
             throw new Exception($result['error']['message']);
         }
 
-        return $data;
+        return $data['params'][0];
     }
 
     /**
@@ -161,9 +161,6 @@ class Request
         $command = sprintf("%s getreceipt --hash %s", $this->command, $hash);
         $result = $this->getExecResult($command);
         $result = json_decode(implode('', $result), true);
-        if ($result['failed']) {
-            throw new Exception($result['result']);
-        }
         return $this->payloadDecode($result['result']);
     }
 
@@ -198,11 +195,11 @@ class Request
      */
     public function getExecResult($command)
     {
-        $result = shell_exec($command);
-        if (! $result) {
-            throw new Exception('获取交易签名失败');
+        exec($command, $result, $status);
+        if ($status != 0) {
+            throw new Exception('get sign error.');
         }
-        return explode("\n", $result);
+        return $result;
     }
 
     /**

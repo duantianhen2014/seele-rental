@@ -16,6 +16,7 @@ class WithdrawRecords extends Model
 
     protected $fillable = [
         'user_id', 'before_balance', 'money', 'status',
+        'tx_hash',
     ];
 
     /**

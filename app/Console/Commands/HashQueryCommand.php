@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\HashQueryJob;
 use App\Models\HashResult;
 use Illuminate\Console\Command;
 
@@ -38,9 +39,9 @@ class HashQueryCommand extends Command
      */
     public function handle()
     {
-        $hashUnHandlerRecords = HashResult::whereNull('result')->orderBy('created_at')->get();
+        $hashUnHandlerRecords = HashResult::where('result', '')->orderBy('created_at')->get();
         foreach ($hashUnHandlerRecords as $hashUnHandlerRecord) {
-            
+            dispatch(new HashQueryJob($hashUnHandlerRecord));
         }
     }
 }

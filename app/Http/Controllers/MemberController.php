@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\MemberWithdrawRequest;
 use App\Models\HashResult;
+use App\Models\WithdrawRecords;
 use App\Seele\User;
 use Exception;
 use App\Http\Requests\MemberChangePasswordRequest;
 use App\Seele\Seele;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -17,7 +19,6 @@ class MemberController extends Controller
 
     public function showWithdrawPage()
     {
-        $balance = 0;
         return view('member.withdraw', compact('balance'));
     }
 
@@ -37,12 +38,21 @@ class MemberController extends Controller
             $seele = new Seele(new User($address, $privateKey));
             $data = $seele->withdraw($money);
 
-            // record
+            // Hash record
             HashResult::create([
                 'tx_hash' => $data['Hash'],
+                'result' => '',
                 'request_data' => ['row' => $data],
                 'request_type' => HashResult::REQUEST_TYPE_WITHDRAW,
             ]);
+
+            // Create Record
+            Auth::user()->withdrawRecords()->save(new WithdrawRecords([
+                'before_balance' => 0,
+                'money' => $money,
+                'status' => WithdrawRecords::STATUS_SUBMIT,
+                'tx_hash' => $data['Hash'],
+            ]));
 
             DB::commit();
             flash()->success('apply has submit.please wait.');
@@ -54,9 +64,13 @@ class MemberController extends Controller
         }
     }
 
-    public function showBalance()
+    public function showBalance(Request $request)
     {
+        $address = $request->get('address');
         $balance = 0;
+        if ($address) {
+            $balance = (new Seele(new User($address, '')))->queryBalance();
+        }
         $withdrawRecords = Auth::user()->withdrawRecords()->orderByDesc('updated_at')->paginate(8);
         return view('member.balance', compact('balance', 'withdrawRecords'));
     }
