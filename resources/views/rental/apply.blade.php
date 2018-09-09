@@ -15,16 +15,16 @@
                     </div>
                     <div class="form-group">
                         <label>Address</label>
-                        <input type="text" name="address" class="form-control" placeholder="Address">
+                        <input type="text" name="address" class="form-control" placeholder="Address" required>
                     </div>
                     <div class="form-group">
                         <label>PrivateKey</label>
-                        <input type="text" name="private_key" class="form-control" placeholder="PrivateKey">
+                        <input type="text" name="private_key" class="form-control" placeholder="PrivateKey" required>
                     </div>
                     <div class="form-group">
                         <label>Charge</label>
                         <div class="input-group">
-                            <input type="text" name="charge" class="form-control" value="{{$product->charge}}">
+                            <input type="text" name="charge" class="form-control" value="{{$product->charge}}" required>
                             <div class="input-group-addon">seele</div>
                         </div>
                     </div>
