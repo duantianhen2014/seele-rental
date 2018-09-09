@@ -12,7 +12,8 @@ class MemberController extends Controller
     public function showBalance()
     {
         $balance = 0;
-        return view('member.balance', compact('balance'));
+        $withdrawRecords = Auth::user()->withdrawRecords()->orderByDesc('updated_at')->paginate(8);
+        return view('member.balance', compact('balance', 'withdrawRecords'));
     }
 
     public function showChangePasswordPage()

@@ -12,6 +12,7 @@ class HashResult extends Model
     const REQUEST_TYPE_A_CONFIRM = 'AConfirm';
     const REQUEST_TYPE_A_COMPLETE = 'AComplete';
     const REQUEST_TYPE_B_COMPLETE = 'BComplete';
+    const REQUEST_TYPE_WITHDRAW = 'Withdraw';
 
     protected $table = 'hash_results';
 

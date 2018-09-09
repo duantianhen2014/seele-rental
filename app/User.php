@@ -4,6 +4,7 @@ namespace App;
 
 use App\Models\Product;
 use App\Models\Rental;
+use App\Models\WithdrawRecords;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -49,6 +50,14 @@ class User extends Authenticatable
     public function products()
     {
         return $this->hasMany(Product::class, 'user_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function withdrawRecords()
+    {
+        return $this->hasMany(WithdrawRecords::class, 'user_id');
     }
 
 }
