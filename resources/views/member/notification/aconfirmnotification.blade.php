@@ -1,0 +1,1 @@
+Now,A has confirm rental and this rental will effective on seele blockchain.When a and you complete rental,you will get reward.

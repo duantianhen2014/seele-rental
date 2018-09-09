@@ -1,0 +1,1 @@
+Now,A has complete rental,please check rental and complete too. <a href="{{route('rental.b_complete', $notification->data['rental_id'])}}">Click me</a>

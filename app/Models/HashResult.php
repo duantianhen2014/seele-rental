@@ -2,6 +2,12 @@
 
 namespace App\Models;
 
+use App\Notifications\ACompleteNotification;
+use App\Notifications\AConfirmNotification;
+use App\Notifications\BCompleteNotification;
+use App\Notifications\BConfirmNotification;
+use App\Notifications\NewRentalNotification;
+use App\Notifications\WithdrawSuccessNotification;
 use App\Seele\Seele;
 use App\Seele\User;
 use Exception;
@@ -37,7 +43,7 @@ class HashResult extends Model
             $rentalRecord = (new Seele(new User($aAddress, '')))->queryContract();
             Log::info($rentalRecord);
 
-            Rental::create([
+            $rental = Rental::create([
                 'a_user_id' => $data['user_id'],
                 'product_id' => $product->id,
                 'b_user_id' => $product->user->id,
@@ -48,6 +54,9 @@ class HashResult extends Model
                 'deposit' => $rentalRecord['deposit'],
                 'a_apply_tx_hash' => $data['row']['Hash'],
             ]);
+
+            $product->user->notify(new NewRentalNotification($rental));
+
         } catch (Exception $exception) {
             Log::info($exception);
         }
@@ -68,6 +77,8 @@ class HashResult extends Model
             $rental->status = Rental::STATUS_B_CONFIRM;
             $rental->save();
 
+            $rental->aUser->notify(new BConfirmNotification($rental));
+
         } catch (Exception $exception) {
             Log::info($exception);
         }
@@ -82,6 +93,8 @@ class HashResult extends Model
 
             $rental->status = Rental::STATUS_A_CONFIRM;
             $rental->save();
+
+            $rental->bUser->notify(new AConfirmNotification($rental));
         } catch (Exception $exception) {
             Log::info($exception);
         }
@@ -96,6 +109,8 @@ class HashResult extends Model
 
             $rental->status = Rental::STATUS_A_COMPLETE;
             $rental->save();
+
+            $rental->bUser->notify(new ACompleteNotification($rental));
         } catch (Exception $exception) {
             Log::info($exception);
         }
@@ -110,6 +125,9 @@ class HashResult extends Model
 
             $rental->status = Rental::STATUS_COMPLETE;
             $rental->save();
+
+            $rental->aUser->notify(new BCompleteNotification($rental));
+            $rental->bUser->notify(new BCompleteNotification($rental));
         } catch (Exception $exception) {
             Log::info($exception);
         }
@@ -123,6 +141,8 @@ class HashResult extends Model
         }
         $withdrawRecord->status = WithdrawRecords::STATUS_SUCCESS;
         $withdrawRecord->save();
+
+        $withdrawRecord->user->notify(new WithdrawSuccessNotification());
     }
 
 }

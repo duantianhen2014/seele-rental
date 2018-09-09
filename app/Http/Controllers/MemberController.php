@@ -10,6 +10,7 @@ use Exception;
 use App\Http\Requests\MemberChangePasswordRequest;
 use App\Seele\Seele;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -111,6 +112,13 @@ class MemberController extends Controller
     {
         $rentals = Auth::user()->joinRentals()->orderByDesc('created_at')->paginate(10);
         return view('member.join_rentals', compact('rentals'));
+    }
+
+    public function showNotificationPage()
+    {
+        $notifications = Auth::user()->notifications;
+        $notifications = new Paginator($notifications, 10);
+        return view('member.notification', compact('notifications'));
     }
 
 }

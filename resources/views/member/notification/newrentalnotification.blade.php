@@ -1,0 +1,1 @@
+A new rental created.Please check it. <a href="{{route('rental.b_confirm', $notification->data['rental_id'])}}">Click me</a>

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use Exception;
 use App\Models\HashResult;
 use App\Models\Rental;
 use App\Seele\Request;
@@ -56,7 +57,7 @@ class HashQueryJob implements ShouldQueue
             }
 
             DB::commit();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             Log::info($exception->getMessage());
             DB::rollBack();
         }

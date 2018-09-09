@@ -1,0 +1,1 @@
+Rental has completed.Please check you balance.
