@@ -24,4 +24,34 @@ class HashResult extends Model
         'tx_hash', 'result', 'request_data', 'request_type',
     ];
 
+    public function handlerApply()
+    {
+
+    }
+
+    public function handlerBConfirm()
+    {
+
+    }
+
+    public function handlerAConfirm()
+    {
+
+    }
+
+    public function handlerAComplete()
+    {
+
+    }
+
+    public function handlerBComplete()
+    {
+
+    }
+
+    public function handlerWithdraw()
+    {
+        
+    }
+
 }
