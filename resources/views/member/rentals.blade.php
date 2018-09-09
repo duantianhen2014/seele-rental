@@ -2,6 +2,8 @@
 
 @section('member')
 
+    <h2>Orders</h2>
+
     <div class="alert alert-warning">
         <p>Note:</p>
         <p>You is <b>B</b> side.</p>

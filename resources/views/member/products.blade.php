@@ -2,6 +2,8 @@
 
 @section('member')
 
+    <h2>Product</h2>
+
     <div>
         <a href="{{route('product.create')}}">Create</a>
     </div>

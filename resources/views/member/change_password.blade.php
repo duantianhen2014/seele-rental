@@ -2,6 +2,8 @@
 
 @section('member')
 
+    <h2>Password Change</h2>
+
     <form action="" method="post" class="form-horizontal">
         {!! csrf_field() !!}
         <div class="form-group">

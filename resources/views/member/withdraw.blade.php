@@ -2,6 +2,8 @@
 
 @section('member')
 
+    <h2>Withdraw</h2>
+
     <div class="alert alert-warning">
         <p>Please recharge to this address:</p>
         <p><b>{{config('seele.contract_address')}}</b></p>
