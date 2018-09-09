@@ -2,6 +2,12 @@
 
 @section('member')
 
+    <div class="alert alert-warning">
+        <p>Note:</p>
+        <p>You is <b>A</b> side.</p>
+        <p>Other is <b>B</b> side.</p>
+    </div>
+
     <table class="table table-hover">
         <thead>
         <th>ID</th>
@@ -24,9 +30,9 @@
                 @if($rental->status == \App\Models\Rental::STATUS_A_APPLY)
                     <span>Wait B Confirm</span>
                     @elseif($rental->status == \App\Models\Rental::STATUS_B_CONFIRM)
-                    <a href="{{route('rentals.a_confirm', $rental)}}">You Should be Confirm</a>
+                    <a href="{{route('rental.a_confirm', $rental)}}">You Should be Confirm</a>
                     @elseif($rental->status == \App\Models\Rental::STATUS_A_CONFIRM)
-                        <a href="{{route('rentals.a_confirm', $rental)}}">Complete Apply</a>
+                        <a href="{{route('rental.a_complete', $rental)}}">Complete Apply</a>
                     @elseif($rental->status == \App\Models\Rental::STATUS_A_COMPLETE)
                         <span>WAIT B CONFIRM</span>
                     @elseif($rental->status == \App\Models\Rental::STATUS_COMPLETE)

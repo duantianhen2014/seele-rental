@@ -2,6 +2,12 @@
 
 @section('member')
 
+    <div class="alert alert-warning">
+        <p>Note:</p>
+        <p>You is <b>B</b> side.</p>
+        <p>Other is <b>A</b> side.</p>
+    </div>
+
     <table class="table table-hover">
         <thead>
         <th>ID</th>

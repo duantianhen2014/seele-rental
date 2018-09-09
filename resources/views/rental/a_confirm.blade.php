@@ -19,13 +19,27 @@
                         <label>Product</label>
                         <input type="text" value="{{$rental->product->title}}" class="form-control" readonly>
                     </div>
-                    <div class="agree-box">
-                        <div class="form-group">
-                            <label>PrivateKey</label>
-                            <input type="text" name="private_key" class="form-control" placeholder="PrivateKey">
-                            <span>Address: <b>{{$rental->a_address}}</b></span>
+                    <div class="form-group">
+                        <label>Charge</label>
+                        <div class="input-group">
+                            <input type="text" value="{{$rental->charge}}" class="form-control" readonly>
+                            <div class="input-group-addon">seele</div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label>Deposit Money</label>
+                        <div class="input-group">
+                            <input type="text" value="{{$rental->deposit}}" class="form-control" readonly>
+                            <div class="input-group-addon">seele</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>PrivateKey</label>
+                        <input type="text" name="private_key" class="form-control" placeholder="PrivateKey">
+                        <span>Address: <b>{{$rental->a_address}}</b></span>
+                    </div>
+
+                    <div class="agree-box"></div>
 
                     <div class="form-group">
                         <label>Agree</label>
