@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\HashResult;
 use App\Models\Product;
 use App\Models\Rental;
 use App\Models\WithdrawRecords;
@@ -58,6 +59,25 @@ class User extends Authenticatable
     public function withdrawRecords()
     {
         return $this->hasMany(WithdrawRecords::class, 'user_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function hashResults()
+    {
+        return $this->hasMany(HashResult::class, 'user_id');
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasSubmitRental()
+    {
+        return $this->hashResults()
+            ->where('result', '')
+            ->where('request_type', HashResult::REQUEST_TYPE_APPLY)
+            ->exists();
     }
 
 }

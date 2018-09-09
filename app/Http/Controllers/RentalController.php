@@ -28,12 +28,18 @@ class RentalController extends Controller
         $privateKey = $request->post('private_key', '');
         $charge = $request->post('charge', 0);
 
+        if (Auth::user()->hasSubmitRental()) {
+            flash()->error('please don\'t repeat submit.');
+            return back();
+        }
+
         try {
             $seele = new Seele(new User($address, $privateKey));
             $data = $seele->apply($product->address, $charge);
 
             // record
             HashResult::create([
+                'user_id' => Auth::id(),
                 'tx_hash' => $data['Hash'],
                 'result' => '',
                 'request_data' => [
@@ -70,6 +76,11 @@ class RentalController extends Controller
         $agree = $request->post('agree', 0);
         $rejectReason = $request->post('reject_reason', '');
 
+        if ($rental->b_confirm_tx_hash) {
+            flash()->error('please don\'t repeat submit.');
+            return back();
+        }
+
         DB::beginTransaction();
         try {
             if (!$agree) {
@@ -82,6 +93,7 @@ class RentalController extends Controller
 
             // record
             HashResult::create([
+                'user_id' => Auth::id(),
                 'tx_hash' => $data['Hash'],
                 'result' => '',
                 'request_data' => ['row' => $data],
@@ -117,6 +129,11 @@ class RentalController extends Controller
         $address = $request->post('address', '');
         $privateKey = $request->post('private_key', '');
 
+        if ($rental->a_confirm_tx_hash) {
+            flash()->error('please don\'t repeat submit.');
+            return back();
+        }
+
         DB::beginTransaction();
         try {
             if (!$agree) {
@@ -130,6 +147,7 @@ class RentalController extends Controller
 
             // record
             HashResult::create([
+                'user_id' => Auth::id(),
                 'tx_hash' => $data['Hash'],
                 'result' => '',
                 'request_data' => ['row' => $data],
@@ -160,6 +178,11 @@ class RentalController extends Controller
         $rental = Rental::findOrFail($rentalId);
         $privateKey = $request->post('private_key', '');
 
+        if ($rental->a_complete_apply_tx_hash) {
+            flash()->error('please don\'t repeat submit.');
+            return back();
+        }
+
         DB::beginTransaction();
         try {
             $seele = new Seele(new User($rental->a_address, $privateKey));
@@ -167,6 +190,7 @@ class RentalController extends Controller
 
             // record
             HashResult::create([
+                'user_id' => Auth::id(),
                 'tx_hash' => $data['Hash'],
                 'result' => '',
                 'request_data' => ['row' => $data],
@@ -197,6 +221,11 @@ class RentalController extends Controller
         $rental = Rental::findOrFail($rentalId);
         $privateKey = $request->post('private_key', '');
 
+        if ($rental->b_complete_tx_hash) {
+            flash()->error('please don\'t repeat submit.');
+            return back();
+        }
+
         DB::beginTransaction();
         try {
             $seele = new Seele(new User($rental->b_address, $privateKey));
@@ -204,6 +233,7 @@ class RentalController extends Controller
 
             // record
             HashResult::create([
+                'user_id' => Auth::id(),
                 'tx_hash' => $data['Hash'],
                 'result' => '',
                 'request_data' => ['row' => $data],

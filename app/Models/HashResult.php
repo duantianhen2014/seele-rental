@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Seele\Request;
 use App\Seele\Seele;
 use App\Seele\User;
 use Exception;
@@ -26,7 +25,7 @@ class HashResult extends Model
     ];
 
     protected $fillable = [
-        'tx_hash', 'result', 'request_data', 'request_type',
+        'tx_hash', 'result', 'request_data', 'request_type', 'user_id',
     ];
 
     public function handlerApply()
