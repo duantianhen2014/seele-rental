@@ -26,6 +26,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        $schedule->command('hash:query')->everyMinute()->appendOutputTo(storage_path('logs/hash_query.log'));
     }
 
     /**
