@@ -8,7 +8,10 @@
     </div>
 
     <p>Balance:</p>
-    <p class="text-right"> <span class="balance" style="font-size: 52px; font-weight: 800;">{{$balance}}</span> seele</p>
+    <p class="text-right">
+        <span class="balance" style="font-size: 52px; font-weight: 800;">{{$balance}}</span> seele
+        <a href="{{route('member.withdraw')}}">Withdraw</a>
+    </p>
 
     <h4>Withdraw Records:</h4>
     <table class="table table-hover">

@@ -2,12 +2,57 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MemberWithdrawRequest;
+use App\Models\HashResult;
+use App\Seele\User;
+use Exception;
 use App\Http\Requests\MemberChangePasswordRequest;
+use App\Seele\Seele;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class MemberController extends Controller
 {
+
+    public function showWithdrawPage()
+    {
+        $balance = 0;
+        return view('member.withdraw', compact('balance'));
+    }
+
+    public function withdrawHandler(MemberWithdrawRequest $request)
+    {
+        $money = $request->post('money', 0);
+        $address = $request->post('address');
+        $privateKey = $request->post('private_key');
+
+        if ($money <= 0) {
+            flash()->error('please input effective number.');
+            return back();
+        }
+
+        DB::beginTransaction();
+        try {
+            $seele = new Seele(new User($address, $privateKey));
+            $data = $seele->withdraw($money);
+
+            // record
+            HashResult::create([
+                'tx_hash' => $data['Hash'],
+                'request_data' => ['row' => $data],
+                'request_type' => HashResult::REQUEST_TYPE_WITHDRAW,
+            ]);
+
+            DB::commit();
+            flash()->success('apply has submit.please wait.');
+            return back();
+        } catch (Exception $exception) {
+            DB::rollBack();
+            flash()->error($exception->getMessage());
+            return back();
+        }
+    }
 
     public function showBalance()
     {

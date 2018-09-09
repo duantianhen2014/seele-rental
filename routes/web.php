@@ -22,6 +22,8 @@ Route::group(['prefix' => '/member', 'middleware' => ['auth']], function () {
     Route::post('/change_password', 'MemberController@changePasswordHandler');
 
     Route::get('/balance', 'MemberController@showBalance')->name('member.balance');
+    Route::get('/balance/withdraw', 'MemberController@showWithdrawPage')->name('member.withdraw');
+    Route::post('/balance/withdraw', 'MemberController@withdrawHandler');
 
     Route::get('/products', 'MemberController@products')->name('member.products');
     Route::get('/products/create', 'ProductController@create')->name('product.create');
