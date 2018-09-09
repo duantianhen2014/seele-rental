@@ -112,19 +112,19 @@ class RentalController extends Controller
 
         $agree = $request->post('agree', false);
         $rejectReason = $request->post('reject_reason', '');
-
         $address = $request->post('address', '');
         $privateKey = $request->post('private_key', '');
 
-        if (!$agree) {
-            $rental->status = Rental::STATUS_REJECT;
-            $rental->reject_reason = $rejectReason;
-            $rental->save();
-        }
-
-        $seele = new Seele(new User($address, $privateKey));
-
+        DB::beginTransaction();
         try {
+            if (!$agree) {
+                $rental->status = Rental::STATUS_REJECT;
+                $rental->reject_reason = $rejectReason;
+                $rental->save();
+            }
+
+            $seele = new Seele(new User($address, $privateKey));
+
             $data = $seele->aConfirm($agree ? 1 : 0);
 
             // record
@@ -134,9 +134,11 @@ class RentalController extends Controller
                 'request_type' => HashResult::REQUEST_TYPE_B_CONFIRM,
             ]);
 
+            DB::commit();
             flash()->success('apply has submit.please wait.');
             return back();
         } catch (Exception $exception) {
+            DB::rollBack();
             flash()->error($exception->getMessage());
             return back();
         }
@@ -153,9 +155,9 @@ class RentalController extends Controller
         $rental = Rental::findOrFail($rentalId);
         $privateKey = $request->post('private_key', '');
 
-        $seele = new Seele(new User($rental->a_address, $privateKey));
-
+        DB::beginTransaction();
         try {
+            $seele = new Seele(new User($rental->a_address, $privateKey));
             $data = $seele->aComplete();
 
             // record
@@ -165,9 +167,11 @@ class RentalController extends Controller
                 'request_type' => HashResult::REQUEST_TYPE_A_COMPLETE,
             ]);
 
+            DB::commit();
             flash()->success('apply has submit.please wait.');
             return back();
         } catch (Exception $exception) {
+            DB::rollBack();
             flash()->error($exception->getMessage());
             return back();
         }
@@ -184,9 +188,10 @@ class RentalController extends Controller
         $rental = Rental::findOrFail($rentalId);
         $privateKey = $request->post('private_key', '');
 
-        $seele = new Seele(new User($rental->b_address, $privateKey));
-
+        DB::beginTransaction();
         try {
+            $seele = new Seele(new User($rental->b_address, $privateKey));
+
             $data = $seele->bComplete($rental->a_address);
 
             // record
@@ -196,9 +201,11 @@ class RentalController extends Controller
                 'request_type' => HashResult::REQUEST_TYPE_B_COMPLETE,
             ]);
 
+            DB::commit();
             flash()->success('apply has submit.please wait.');
             return back();
         } catch (Exception $exception) {
+            DB::rollBack();
             flash()->error($exception->getMessage());
             return back();
         }
