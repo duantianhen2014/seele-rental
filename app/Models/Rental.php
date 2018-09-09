@@ -77,4 +77,34 @@ class Rental extends Model
         return $s;
     }
 
+    public static function removeHash(HashResult $hashResult)
+    {
+        $key = '';
+        switch ($hashResult->request_type) {
+            case HashResult::REQUEST_TYPE_APPLY:
+                $key = 'a_apply_tx_hash';
+                break;
+            case HashResult::REQUEST_TYPE_A_CONFIRM:
+                $key = 'a_confirm_tx_hash';
+                break;
+            case HashResult::REQUEST_TYPE_B_CONFIRM:
+                $key = 'b_confirm_tx_hash';
+                break;
+            case HashResult::REQUEST_TYPE_B_COMPLETE:
+                $key = 'b_complete_tx_hash';
+                break;
+            case HashResult::REQUEST_TYPE_A_COMPLETE:
+                $key = 'a_complete_apply_tx_hash';
+                break;
+        }
+        if (!$key) {
+            return;
+        }
+        $rental = self::where($key, $hashResult->tx_hash)->first();
+        if ($rental) {
+            $rental->$key = '';
+            $rental->save();
+        }
+    }
+
 }

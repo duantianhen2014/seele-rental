@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\HashResult;
+use App\Models\Rental;
 use App\Seele\Request;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -43,6 +44,9 @@ class HashQueryJob implements ShouldQueue
             if ($result['failed']) {
                 $this->hashResult->result = $result['result'];
                 $this->hashResult->save();
+
+                // Rental has revert
+                Rental::removeHash($this->hashResult);
             } else {
                 $this->hashResult->result = json_encode($result);
                 $this->hashResult->save();
