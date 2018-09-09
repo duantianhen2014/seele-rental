@@ -49,13 +49,13 @@ DB_PASSWORD=secret
 
 > you has already input correct database config.
 
-```$xslt
+```
 php artisan migrate
 ```
 
 - running
 
-```$xslt
+```
 php artisan serve
 ```
 
