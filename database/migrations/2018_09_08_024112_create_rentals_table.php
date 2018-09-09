@@ -28,7 +28,7 @@ class CreateRentalsTable extends Migration
             $table->string('b_confirm_tx_hash')->default('');
             $table->string('a_confirm_tx_hash')->default('');
             $table->string('a_complete_apply_tx_hash')->default('');
-            $table->string('b_complete_txt_hash')->default('');
+            $table->string('b_complete_tx_hash')->default('');
             $table->timestamps();
         });
     }

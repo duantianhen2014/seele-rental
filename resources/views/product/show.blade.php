@@ -11,6 +11,7 @@
             </p>
             <p>Rental Money: <b>{{ $product->charge }}</b> seele</p>
             <p>Deposit Money: <b>{{ $product->deposit }}</b> seele</p>
+            <p>Address: {{$product->address}}</p>
 
             <p>Description:</p>
             <p>{!! nl2br($product->description) !!}</p>

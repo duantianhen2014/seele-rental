@@ -161,7 +161,10 @@ class Request
         $command = sprintf("%s getreceipt --hash %s", $this->command, $hash);
         $result = $this->getExecResult($command);
         $result = json_decode(implode('', $result), true);
-        return $this->payloadDecode($result['result']);
+//        if ($result['failed']) {
+//            throw new Exception($result['result']);
+//        }
+        return $result;
     }
 
     /**

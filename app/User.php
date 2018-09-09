@@ -32,7 +32,7 @@ class User extends Authenticatable
 
     public function rentals()
     {
-        return $this->hasMany(Rental::class, 'a_user_id');
+        return $this->hasMany(Rental::class, 'b_user_id');
     }
 
     /**
@@ -41,7 +41,7 @@ class User extends Authenticatable
      */
     public function joinRentals()
     {
-        return $this->hasMany(Rental::class, 'b_user_id');
+        return $this->hasMany(Rental::class, 'a_user_id');
     }
 
     /**

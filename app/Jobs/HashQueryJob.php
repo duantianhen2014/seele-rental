@@ -10,6 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class HashQueryJob implements ShouldQueue
 {
@@ -37,15 +38,22 @@ class HashQueryJob implements ShouldQueue
         DB::beginTransaction();
         try {
             $result = (new Request)->queryHash($this->hashResult->tx_hash);
+            Log::info($result);
 
-            $this->hashResult->result = json_encode($result);
-            $this->hashResult->save();
+            if ($result['failed']) {
+                $this->hashResult->result = $result['result'];
+                $this->hashResult->save();
+            } else {
+                $this->hashResult->result = json_encode($result);
+                $this->hashResult->save();
 
-            $method = 'handler' . $this->hashResult->request_type;
-            $this->hashResult->{$method}();
+                $method = 'handler' . $this->hashResult->request_type;
+                $this->hashResult->{$method}();
+            }
 
             DB::commit();
         } catch (\Exception $exception) {
+            Log::info($exception->getMessage());
             DB::rollBack();
         }
     }

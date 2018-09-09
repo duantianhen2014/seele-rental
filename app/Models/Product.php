@@ -12,7 +12,7 @@ class Product extends Model
 
     protected $fillable = [
         'title', 'description', 'charge', 'deposit',
-        'user_id',
+        'user_id', 'address',
     ];
 
     public function rentals()

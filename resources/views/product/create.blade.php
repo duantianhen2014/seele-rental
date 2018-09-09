@@ -28,6 +28,10 @@
                         <input type="text" name="deposit" class="form-control" value="0" required>
                     </div>
                     <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" name="address" class="form-control" placeholder="address" required>
+                    </div>
+                    <div class="form-group">
                         <button class="btn btn-primary">Create</button>
                     </div>
                 </form>

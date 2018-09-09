@@ -1,6 +1,6 @@
 pragma solidity ^0.4.0;
 
-contract Rental {
+contract SeeleRental {
 
     address public owner;
 
@@ -35,7 +35,7 @@ contract Rental {
         balances[msg.sender] += msg.value;
     }
 
-    function quertyBalance(address queryAddress) public view returns (uint) {
+    function queryBalance(address queryAddress) public view returns (uint) {
         return balances[queryAddress];
     }
 

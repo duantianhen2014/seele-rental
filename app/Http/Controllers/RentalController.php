@@ -9,6 +9,7 @@ use Exception;
 use App\Models\Product;
 use App\Models\Rental;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class RentalController extends Controller
@@ -27,10 +28,9 @@ class RentalController extends Controller
         $privateKey = $request->post('private_key', '');
         $charge = $request->post('charge', 0);
 
-        $seele = new Seele(new User($address, $privateKey));
-
         try {
-            $data = $seele->apply($address, $charge);
+            $seele = new Seele(new User($address, $privateKey));
+            $data = $seele->apply($product->address, $charge);
 
             // record
             HashResult::create([
@@ -38,6 +38,7 @@ class RentalController extends Controller
                 'result' => '',
                 'request_data' => [
                     'product_id' => $product->id,
+                    'user_id' => Auth::id(),
                     'row' => $data,
                 ],
                 'request_type' => HashResult::REQUEST_TYPE_APPLY,
@@ -64,32 +65,31 @@ class RentalController extends Controller
         $charge = $request->post('charge', 0);
         $deposit = $request->post('deposit', 0);
 
-        $address = $request->post('address', '');
         $privateKey = $request->post('private_key', '');
 
-        $agree = $request->post('agree', false);
+        $agree = $request->post('agree', 0);
         $rejectReason = $request->post('reject_reason', '');
 
         DB::beginTransaction();
         try {
-
             if (!$agree) {
                 $rental->status = Rental::STATUS_REJECT;
                 $rental->reject_reason = $rejectReason;
-                $rental->save();
             }
 
-            $seele = new Seele(new User($address, $privateKey));
-
-            $data = $seele->bConfirm($address, $charge, $deposit, $agree);
+            $seele = new Seele(new User($rental->b_address, $privateKey));
+            $data = $seele->bConfirm($rental->a_address, $charge, $deposit, $agree);
 
             // record
             HashResult::create([
                 'tx_hash' => $data['Hash'],
                 'result' => '',
                 'request_data' => ['row' => $data],
-                'request_type' => HashResult::REQUEST_TYPE_A_CONFIRM,
+                'request_type' => HashResult::REQUEST_TYPE_B_CONFIRM,
             ]);
+
+            $rental->b_confirm_tx_hash = $data['Hash'];
+            $rental->save();
 
             DB::commit();
 
@@ -126,16 +126,18 @@ class RentalController extends Controller
             }
 
             $seele = new Seele(new User($address, $privateKey));
-
-            $data = $seele->aConfirm($agree ? 1 : 0);
+            $data = $seele->aConfirm((bool) $agree);
 
             // record
             HashResult::create([
                 'tx_hash' => $data['Hash'],
                 'result' => '',
                 'request_data' => ['row' => $data],
-                'request_type' => HashResult::REQUEST_TYPE_B_CONFIRM,
+                'request_type' => HashResult::REQUEST_TYPE_A_CONFIRM,
             ]);
+
+            $rental->a_confirm_tx_hash = $data['Hash'];
+            $rental->save();
 
             DB::commit();
             flash()->success('apply has submit.please wait.');
@@ -171,6 +173,9 @@ class RentalController extends Controller
                 'request_type' => HashResult::REQUEST_TYPE_A_COMPLETE,
             ]);
 
+            $rental->a_complete_apply_tx_hash = $data['Hash'];
+            $rental->save();
+
             DB::commit();
             flash()->success('apply has submit.please wait.');
             return back();
@@ -195,7 +200,6 @@ class RentalController extends Controller
         DB::beginTransaction();
         try {
             $seele = new Seele(new User($rental->b_address, $privateKey));
-
             $data = $seele->bComplete($rental->a_address);
 
             // record
@@ -205,6 +209,9 @@ class RentalController extends Controller
                 'request_data' => ['row' => $data],
                 'request_type' => HashResult::REQUEST_TYPE_B_COMPLETE,
             ]);
+
+            $rental->b_complete_tx_hash = $data['Hash'];
+            $rental->save();
 
             DB::commit();
             flash()->success('apply has submit.please wait.');

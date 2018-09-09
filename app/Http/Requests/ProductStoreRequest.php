@@ -26,6 +26,7 @@ class ProductStoreRequest extends FormRequest
         return [
             'product_title' => 'required|max:255|min:10',
             'product_description' => 'required',
+            'address' => 'required',
         ];
     }
 
@@ -36,6 +37,7 @@ class ProductStoreRequest extends FormRequest
             'description' => $this->post('product_description'),
             'charge' => $this->post('charge', 0),
             'deposit' => $this->post('deposit', 0),
+            'address' => $this->post('address'),
         ];
     }
 

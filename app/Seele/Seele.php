@@ -28,13 +28,13 @@ class Seele
 
     public function queryBalance()
     {
-        [$balance] = $this->request->call('27e235e3', $this->user->address);
+        [$balance] = $this->request->call('37f42841', $this->user->address);
         return hexdec($balance);
     }
 
     public function queryContract()
     {
-        [$address, $charge, $deposit, $aConfirm, $bConfirm, $aCompleteConfirm] = $this->request->call('469e9067', $this->user->address);
+        [$address, $charge, $deposit, $aConfirm, $bConfirm, $aCompleteConfirm] = $this->request->call('cb545e4b', $this->user->address);
         $charge = hexdec($charge);
         $deposit = hexdec($deposit);
         $aConfirm = (bool)$aConfirm;
@@ -45,7 +45,7 @@ class Seele
 
     public function apply($address, $charge)
     {
-        $result = $this->request->request('207a7254', $address, $charge);
+        $result = $this->request->request('207a7254', $address, dechex($charge));
         return $result;
     }
 
@@ -62,7 +62,7 @@ class Seele
 
     public function bConfirm($address, int $charge, int $deposit, bool $agree)
     {
-        return $this->request->request('119e9c69', $address, $deposit, $agree ? 1 : 0, $charge);
+        return $this->request->request('abb5b996', $address, dechex($charge), dechex($deposit), $agree);
     }
 
     public function bComplete($address)
@@ -72,7 +72,7 @@ class Seele
 
     public function withdraw(int $money)
     {
-        return $this->request->request('2e1a7d4d', $money);
+        return $this->request->request('2e1a7d4d', dechex($money));
     }
 
 }

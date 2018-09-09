@@ -20,12 +20,9 @@
                         <input type="text" value="{{$rental->product->title}}" class="form-control" readonly>
                     </div>
                     <div class="form-group">
-                        <label>Address</label>
-                        <input type="text" name="address" class="form-control" placeholder="Address" required>
-                    </div>
-                    <div class="form-group">
                         <label>PrivateKey</label>
                         <input type="text" name="private_key" class="form-control" placeholder="PrivateKey" required>
+                        <span>Address:{{$rental->b_address}}</span>
                     </div>
                     <div class="form-group">
                         <label>Agree</label>

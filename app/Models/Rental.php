@@ -20,6 +20,8 @@ class Rental extends Model
     protected $fillable = [
         'product_id', 'a_user_id', 'b_user_id', 'a_address', 'b_address',
         'status', 'charge', 'deposit', 'reject_reason',
+        'a_apply_tx_hash', 'b_confirm_tx_hash', 'a_confirm_tx_hash',
+        'a_complete_apply_tx_hash', 'b_complete_tx_hash',
     ];
 
     /**
