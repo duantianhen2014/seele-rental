@@ -22,7 +22,7 @@
 
                     <div class="form-group">
                         <label>Agree</label>
-                        <select name="agree" class="from-control">
+                        <select name="agree" class="form-control">
                             <option value="1">agree</option>
                             <option value="0">disagree</option>
                         </select>

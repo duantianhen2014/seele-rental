@@ -21,7 +21,7 @@
             @empty
             <tr>
                 <td colspan="3" class="text-center">
-                    None. <a href="{{route('product.create')}}">Create</a></a>
+                    None. <a href="{{route('product.create')}}">Create</a>
                 </td>
             </tr>
         @endforelse

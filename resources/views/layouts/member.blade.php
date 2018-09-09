@@ -16,10 +16,10 @@
                         <a href="{{route('member.products') }}">Products</a>
                     </li>
                     <li class="list-group-item">
-                        <a href="{{route('home') }}">Orders</a>
+                        <a href="{{route('member.rentals') }}">Orders</a>
                     </li>
                     <li class="list-group-item">
-                        <a href="{{route('home') }}">Rentals</a>
+                        <a href="{{route('member.join_rentals') }}">Rentals</a>
                     </li>
                     <li class="list-group-item">
                         <a href="{{route('member.change_password') }}">PasswordChange</a>

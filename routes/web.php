@@ -27,6 +27,26 @@ Route::group(['prefix' => '/member', 'middleware' => ['auth']], function () {
     Route::get('/products/create', 'ProductController@create')->name('product.create');
     Route::post('/products/create', 'ProductController@store');
 
-    Route::get('/rental/product/{id}', 'RentalController@showApplyPage')->name('rental.apply');
-    Route::post('/rental/product/{id}', 'RentalController@applyHandler');
+    // A APPLY
+    Route::get('/rental/product/{id}/apply', 'RentalController@showApplyPage')->name('rental.apply');
+    Route::post('/rental/product/{id}/apply', 'RentalController@applyHandler');
+
+    // B CONFIRM
+    Route::get('/rental/product/{id}/b_confirm', 'RentalController@showBConfirmPage')->name('rental.b_confirm');
+    Route::post('/rental/product/{id}/b_confirm', 'RentalController@bConfirmHandler');
+
+    // A CONFIRM
+    Route::get('/rental/product/{id}/a_confirm', 'RentalController@showAConfirmPage')->name('rental.a_confirm');
+    Route::post('/rental/product/{id}/a_confirm', 'RentalController@aConfirmHandler');
+
+    // A COMPLETE
+    Route::get('/rental/product/{id}/a_complete', 'RentalController@showACompletePage')->name('rental.a_complete');
+    Route::post('/rental/product/{id}/a_complete', 'RentalController@aCompleteHandler');
+
+    // B COMPLETE
+    Route::get('/rental/product/{id}/b_complete', 'RentalController@showBCompletePage')->name('rental.b_complete');
+    Route::post('/rental/product/{id}/b_complete', 'RentalController@bCompleteHandler');
+
+    Route::get('/rentals', 'MemberController@rentals')->name('member.rentals');
+    Route::get('/join_rentals', 'MemberController@joinRentals')->name('member.join_rentals');
 });
