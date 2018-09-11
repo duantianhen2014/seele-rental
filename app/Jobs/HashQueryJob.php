@@ -42,12 +42,12 @@ class HashQueryJob implements ShouldQueue
             $result = (new Request)->queryHash($this->hashResult->tx_hash);
             Log::info($result);
 
-            if (isset($result['code'])) {
-//                $this->hashResult->result = $result;
-//                $this->hashResult->save();
-//
-//                // Rental has revert
-//                Rental::removeHash($this->hashResult);
+            if (isset($result['code']) && $result['code'] != -32000) {
+                $this->hashResult->result = $result;
+                $this->hashResult->save();
+
+                // Rental has revert
+                Rental::removeHash($this->hashResult);
             } else {
                 $this->hashResult->result = json_encode($result);
                 $this->hashResult->save();

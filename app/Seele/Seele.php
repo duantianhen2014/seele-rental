@@ -60,7 +60,7 @@ class Seele
         return $this->request->request('fe3b79ce');
     }
 
-    public function bConfirm($address, int $charge, int $deposit, bool $agree)
+    public function bConfirm($address, $charge, $deposit, bool $agree)
     {
         return $this->request->request(
             'abb5b996',
@@ -76,7 +76,7 @@ class Seele
         return $this->request->request('23c7ed3d', $address);
     }
 
-    public function withdraw(int $money)
+    public function withdraw($money)
     {
         return $this->request->request('2e1a7d4d', dechex($this->balanceForSeele($money)));
     }
