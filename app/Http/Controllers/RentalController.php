@@ -33,6 +33,11 @@ class RentalController extends Controller
             return back();
         }
 
+        if (Auth::id() == $product->user_id) {
+            flash()->error('you has this product.');
+            return back();
+        }
+
         try {
             $seele = new Seele(new User($address, $privateKey));
             $data = $seele->apply($product->address, $charge);
