@@ -19,6 +19,16 @@ class WithdrawRecords extends Model
         'tx_hash',
     ];
 
+    public function getMoneyAttribute($value)
+    {
+        return $value / self::F;
+    }
+
+    public function setMoneyAttribute($value)
+    {
+        $this->attributes['charge'] = $value * self::F;
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
