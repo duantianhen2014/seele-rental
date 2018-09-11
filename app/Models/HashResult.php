@@ -48,7 +48,7 @@ class HashResult extends Model
                 'product_id' => $product->id,
                 'b_user_id' => $product->user->id,
                 'a_address' => $aAddress,
-                'b_address' => $rentalRecord['address'],
+                'b_address' => $product->address,
                 'status' => Rental::STATUS_A_APPLY,
                 'charge' => $rentalRecord['charge'],
                 'deposit' => $rentalRecord['deposit'],
