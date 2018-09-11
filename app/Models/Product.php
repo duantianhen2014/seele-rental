@@ -25,4 +25,24 @@ class Product extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function getChargeAttribute($value)
+    {
+        return $value / Rental::F;
+    }
+
+    public function getDepositAttribute($value)
+    {
+        return $value / Rental::F;
+    }
+
+    public function setChargeAttribute($value)
+    {
+        $this->attributes['charge'] = $value * Rental::F;
+    }
+
+    public function setDepositAttribute($value)
+    {
+        $this->attributes['deposit'] = $value * Rental::F;
+    }
+
 }

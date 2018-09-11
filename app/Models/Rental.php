@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Rental extends Model
 {
 
+    const F = 100000000;
+
     const STATUS_A_APPLY = 1;
     const STATUS_B_CONFIRM = 5;
     const STATUS_A_CONFIRM = 10;
@@ -105,6 +107,26 @@ class Rental extends Model
             $rental->$key = '';
             $rental->save();
         }
+    }
+
+    public function getChargeAttribute($value)
+    {
+        return $value / self::F;
+    }
+
+    public function getDepositAttribute($value)
+    {
+        return $value / self::F;
+    }
+
+    public function setChargeAttribute($value)
+    {
+        $this->attributes['charge'] = $value * self::F;
+    }
+
+    public function setDepositAttribute($value)
+    {
+        $this->attributes['deposit'] = $value * self::F;
     }
 
 }
