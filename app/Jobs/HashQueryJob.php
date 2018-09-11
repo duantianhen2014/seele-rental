@@ -42,7 +42,7 @@ class HashQueryJob implements ShouldQueue
             $result = (new Request)->queryHash($this->hashResult->tx_hash);
             Log::info($result);
 
-            if ($result['failed']) {
+            if (isset($result['failed']) && $result['failed']) {
                 $this->hashResult->result = $result['result'];
                 $this->hashResult->save();
 

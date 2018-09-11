@@ -158,7 +158,7 @@ class Request
     public function queryHash(string $hash)
     {
         $hash = substr($hash, 0, 2) == '0x' ? $hash : '0x'.$hash;
-        $command = sprintf("%s getreceipt --hash %s", $this->command, $hash);
+        $command = sprintf("%s getreceiptbytxhash --hash %s", $this->command, $hash);
         $result = $this->getExecResult($command);
         $result = json_decode(implode('', $result), true);
 //        if ($result['failed']) {
