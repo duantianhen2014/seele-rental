@@ -29,13 +29,13 @@
                 <td>{{$rental->statusText()}}</td>
                 <td>{{$rental->updated_at}}</td>
                 <td>
-                    @if($rental->status == \App\Models\Rental::STATUS_A_APPLY)
+                    @if($rental->status == \App\Models\Rental::STATUS_A_APPLY && !$rental->b_confirm_tx_hash)
                         <a href="{{route('rental.b_confirm', $rental)}}">You Should be Confirm</a>
                     @elseif($rental->status == \App\Models\Rental::STATUS_B_CONFIRM)
                         <span>Wait A Confirm</span>
                     @elseif($rental->status == \App\Models\Rental::STATUS_A_CONFIRM)
                         <span>Wait A Complete</span>
-                    @elseif($rental->status == \App\Models\Rental::STATUS_A_COMPLETE)
+                    @elseif($rental->status == \App\Models\Rental::STATUS_A_COMPLETE && !$rental->b_complete_tx_hash)
                         <a href="{{route('rental.b_complete', $rental)}}">You Should Be Complete</a>
                     @elseif($rental->status == \App\Models\Rental::STATUS_COMPLETE)
                         <span>Complete</span>

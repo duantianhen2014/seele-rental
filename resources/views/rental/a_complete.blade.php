@@ -7,7 +7,7 @@
             <div class="col-sm-12">
                 <h3 class="text-center">Rental Complete Apply</h3>
 
-                <div class="alert alert-danger">
+                <div class="alert alert-warning">
                     <p>Note:</p>
                     <p>If you click confirm button,the charge will transfer to rental owner and deposit will return you.</p>
                 </div>
