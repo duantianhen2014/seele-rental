@@ -21,12 +21,12 @@ class WithdrawRecords extends Model
 
     public function getMoneyAttribute($value)
     {
-        return $value / self::F;
+        return $value / Rental::F;
     }
 
     public function setMoneyAttribute($value)
     {
-        $this->attributes['charge'] = $value * self::F;
+        $this->attributes['charge'] = $value * Rental::F;
     }
 
     /**
