@@ -41,6 +41,7 @@ class HashQueryCommand extends Command
     {
         $hashUnHandlerRecords = HashResult::where('result', '')->orderBy('created_at')->get();
         foreach ($hashUnHandlerRecords as $hashUnHandlerRecord) {
+            $this->line($hashUnHandlerRecord->tx_hash);
             dispatch(new HashQueryJob($hashUnHandlerRecord));
         }
     }
