@@ -43,13 +43,9 @@ class HashQueryJob implements ShouldQueue
             Log::info($result);
 
             if (isset($result['code'])) {
-                if ($result['code'] != -32000) {
-                    $this->hashResult->result = $result;
-                    $this->hashResult->save();
-
-                    // Rental has revert
-                    Rental::removeHash($this->hashResult);
-                }
+                $this->hashResult->result = json_encode($result);
+                $this->hashResult->save();
+                Rental::removeHash($this->hashResult);
             } else {
                 $this->hashResult->result = json_encode($result);
                 $this->hashResult->save();

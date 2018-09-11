@@ -7,7 +7,7 @@
             <div class="col-sm-12">
                 <h3 class="text-center">Rental Complete Over.</h3>
 
-                <div class="alert alert-danger">
+                <div class="alert alert-warning">
                     <p>Note:</p>
                     <p>If you click confirm button,you will get rental charge and deposit will return user.</p>
                 </div>

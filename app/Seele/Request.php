@@ -161,6 +161,7 @@ class Request
         $command = sprintf("%s getreceiptbytxhash --hash %s", $this->command, $hash);
         $result = $this->getExecResult($command);
         $result = json_decode(implode('', $result), true);
+        throw_if(isset($result['code']) && $result['code'] == -32000, new Exception('hash not found.'));
         return $result;
     }
 
