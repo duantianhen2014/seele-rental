@@ -105,7 +105,7 @@ class Request
             throw new Exception($result['error']['message']);
         }
 
-        return $data['params'][0]['Hash'];
+        return $data['params'][0];
     }
 
     /**
