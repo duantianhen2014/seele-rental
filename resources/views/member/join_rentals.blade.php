@@ -33,7 +33,7 @@
                     <span>Wait B Confirm</span>
                     @elseif($rental->status == \App\Models\Rental::STATUS_B_CONFIRM && !$rental->a_confirm_tx_hash)
                     <a href="{{route('rental.a_confirm', $rental)}}">You Should be Confirm</a>
-                    @elseif($rental->status == \App\Models\Rental::STATUS_A_CONFIRM && !$rental->a_complete_tx_hash)
+                    @elseif($rental->status == \App\Models\Rental::STATUS_A_CONFIRM && !$rental->a_complete_apply_tx_hash)
                         <a href="{{route('rental.a_complete', $rental)}}">Complete Apply</a>
                     @elseif($rental->status == \App\Models\Rental::STATUS_A_COMPLETE)
                         <span>WAIT B CONFIRM</span>
