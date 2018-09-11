@@ -29,14 +29,14 @@ class Seele
     public function queryBalance()
     {
         [$balance] = $this->request->call('37f42841', $this->user->address);
-        return $this->realBalance(hexdec($balance));
+        return $this->balanceForHumans(hexdec($balance));
     }
 
     public function queryContract()
     {
         [$address, $charge, $deposit, $aConfirm, $bConfirm, $aCompleteConfirm] = $this->request->call('cb545e4b', $this->user->address);
-        $charge = $this->realBalance(hexdec($charge));
-        $deposit = $this->realBalance(hexdec($deposit));
+        $charge = $this->balanceForHumans(hexdec($charge));
+        $deposit = $this->balanceForHumans(hexdec($deposit));
         $aConfirm = (bool)hexdec($aConfirm);
         $bConfirm = (bool)hexdec($bConfirm);
         $aCompleteConfirm = (bool)hexdec($aCompleteConfirm);
@@ -45,7 +45,7 @@ class Seele
 
     public function apply($address, $charge)
     {
-        $result = $this->request->request('207a7254', $address, dechex($this->realBalance($charge)));
+        $result = $this->request->request('207a7254', $address, dechex($this->balanceForSeele($charge)));
         return $result;
     }
 
@@ -65,8 +65,8 @@ class Seele
         return $this->request->request(
             'abb5b996',
             $address,
-            dechex($this->realBalance($charge)),
-            dechex($this->realBalance($deposit)),
+            dechex($this->balanceForSeele($charge)),
+            dechex($this->balanceForSeele($deposit)),
             $agree
         );
     }
@@ -78,13 +78,17 @@ class Seele
 
     public function withdraw(int $money)
     {
-        return $this->request->request('2e1a7d4d', dechex($this->realBalance($money)));
+        return $this->request->request('2e1a7d4d', dechex($this->balanceForSeele($money)));
     }
 
-    public function realBalance($balance)
+    public function balanceForHumans($balance)
     {
-        $w = 100000000;
-        return $balance >= $w ? $balance / 100000000 : $w * $balance;
+        return $balance / 100000000;
+    }
+
+    public function balanceForSeele($balance)
+    {
+        return $balance * 100000000;
     }
 
 }
