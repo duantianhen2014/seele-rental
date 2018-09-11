@@ -24,7 +24,7 @@ class MemberWithdrawRequest extends FormRequest
     public function rules()
     {
         return [
-            'money' => 'required|integer|min:1',
+            'money' => 'required',
             'address' => 'required',
             'private_key' => 'required',
         ];
