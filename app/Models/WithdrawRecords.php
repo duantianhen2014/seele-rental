@@ -26,7 +26,7 @@ class WithdrawRecords extends Model
 
     public function setMoneyAttribute($value)
     {
-        $this->attributes['charge'] = $value * Rental::F;
+        $this->attributes['money'] = $value * Rental::F;
     }
 
     /**
