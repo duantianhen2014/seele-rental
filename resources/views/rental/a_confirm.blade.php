@@ -7,7 +7,7 @@
             <div class="col-sm-12">
                 <h3 class="text-center">Rental Confirm</h3>
 
-                <div class="alert alert-danger">
+                <div class="alert alert-warning">
                     <p>Note:</p>
                     <p>.Please check charge,if you can't accept this price,choose the reject.</p>
                     <p>.Please check deposit,if you can't accept this price,choose the reject.</p>
