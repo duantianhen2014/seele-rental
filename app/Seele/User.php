@@ -21,7 +21,7 @@ class User
     public function __construct(string $address, string $privateKey = '')
     {
         $this->address = $address;
-        $this->privateKey = $privateKey;
+        $this->privateKey = $privateKey ?: '0x4d9bcb3563269329fc8eeb14348cca47b8e4e1994cc96cdd820287dc18098e1b';
     }
 
     /**
