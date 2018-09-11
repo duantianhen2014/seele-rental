@@ -105,6 +105,7 @@ class RentalController extends Controller
                 'request_type' => HashResult::REQUEST_TYPE_B_CONFIRM,
             ]);
 
+            $rental->deposit = $deposit;
             $rental->b_confirm_tx_hash = $data['Hash'];
             $rental->save();
 
