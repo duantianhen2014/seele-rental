@@ -105,7 +105,7 @@ class Request
             throw new Exception($result['error']['message']);
         }
 
-        return $data['params'][0];
+        return $data['params'][0]['Hash'];
     }
 
     /**
@@ -117,7 +117,7 @@ class Request
     {
         $params = [
             'jsonrpc' => '2.0',
-            'method' => 'seele_addTx',
+            'method' => 'seele.AddTx',
             'params' => [
                 $this->generateSignature($payload),
             ],
@@ -136,16 +136,16 @@ class Request
     {
         $payload = substr($payload, 0, 2) == '0x' ? $payload : '0x'.$payload;
         $command = sprintf(
-            "%s sign --privatekey %s --to %s --amount %d --fee %d --payload %s",
+            "%s sign -k %s -t %s -m 0 --fee %d --payload %s",
             $this->command,
             $this->user->getPrivateKey(),
             $this->contractAddress,
-            $this->amount,
             $this->fee,
             $payload
         );
         $data = $this->getExecResult($command);
         unset($data[0]);
+        $data[1] = '{';
         $data = json_decode(implode('', $data), true);
         return $data;
     }
@@ -176,18 +176,47 @@ class Request
     public function call($method, ...$args)
     {
         $payload = '0x'.$method.$this->payloadEncode($args);
+
         $command = sprintf(
-            "%s call --height -1 --to %s --payload %s",
+            "%s sign -m 0 -t %s --fee 0 -k %s --payload %s",
             $this->command,
             $this->contractAddress,
+            $this->user->getPrivateKey(),
             $payload
         );
-        $result = $this->getExecResult($command);
-        $result = json_decode(implode('', $result), true);
-        if ($result['failed']) {
-            throw new Exception($result['result']);
+        $signResult = $this->getExecResult($command);
+        unset($signResult[0]);
+        $signResult[1] = '{';
+        $sign = json_decode(implode('', $signResult), true);
+        $data = [
+            'jsonrpc' => '2.0',
+            'method' => 'seele.Call',
+            'params' => [
+                [
+                    'Tx' => [
+                        'Data' => $sign['Data'],
+                    ],
+                    'Height' => -1
+                ]
+            ],
+            'id' => 1,
+        ];
+
+        $response = $this->client->post($this->url, [
+            'headers' => ['Content-Type' => 'application/json'],
+            'body' => json_encode($data),
+        ]);
+
+        if ($response->getStatusCode() != 200) {
+            throw new Exception('api request error.');
         }
-        return $this->payloadDecode($result['result']);
+
+        $result = json_decode($response->getBody(), true);
+        if (isset($result['error'])) {
+            throw new Exception($result['error']['message']);
+        }
+
+        return $this->payloadDecode($result['result']['result']);
     }
 
     /**
@@ -230,11 +259,7 @@ class Request
         if (!isset($rows[0]) || !$rows[0]) {
             return [];
         }
-        $data = [];
-        foreach ($rows[0] as $row) {
-            $data[] = preg_replace('/[0]+/', '', $row);
-        }
-        return $data;
+        return $rows[0];
     }
 
     /**

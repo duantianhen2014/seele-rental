@@ -29,23 +29,23 @@ class Seele
     public function queryBalance()
     {
         [$balance] = $this->request->call('37f42841', $this->user->address);
-        return hexdec($balance);
+        return $this->realBalance(hexdec($balance));
     }
 
     public function queryContract()
     {
         [$address, $charge, $deposit, $aConfirm, $bConfirm, $aCompleteConfirm] = $this->request->call('cb545e4b', $this->user->address);
-        $charge = hexdec($charge);
-        $deposit = hexdec($deposit);
-        $aConfirm = (bool)$aConfirm;
-        $bConfirm = (bool)$bConfirm;
-        $aCompleteConfirm = (bool)$aCompleteConfirm;
+        $charge = $this->realBalance(hexdec($charge));
+        $deposit = $this->realBalance(hexdec($deposit));
+        $aConfirm = (bool)hexdec($aConfirm);
+        $bConfirm = (bool)hexdec($bConfirm);
+        $aCompleteConfirm = (bool)hexdec($aCompleteConfirm);
         return compact('address', 'charge', 'deposit', 'aConfirm', 'bConfirm', 'aCompleteConfirm');
     }
 
     public function apply($address, $charge)
     {
-        $result = $this->request->request('207a7254', $address, dechex($charge));
+        $result = $this->request->request('207a7254', $address, dechex($this->realBalance($charge)));
         return $result;
     }
 
@@ -62,7 +62,13 @@ class Seele
 
     public function bConfirm($address, int $charge, int $deposit, bool $agree)
     {
-        return $this->request->request('abb5b996', $address, dechex($charge), dechex($deposit), $agree);
+        return $this->request->request(
+            'abb5b996',
+            $address,
+            dechex($this->realBalance($charge)),
+            dechex($this->realBalance($deposit)),
+            $agree
+        );
     }
 
     public function bComplete($address)
@@ -72,7 +78,13 @@ class Seele
 
     public function withdraw(int $money)
     {
-        return $this->request->request('2e1a7d4d', dechex($money));
+        return $this->request->request('2e1a7d4d', dechex($this->realBalance($money)));
+    }
+
+    public function realBalance($balance)
+    {
+        $w = 100000000;
+        return $balance >= $w ? $balance / 100000000 : $w * $balance;
     }
 
 }
