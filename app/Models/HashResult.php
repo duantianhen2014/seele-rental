@@ -8,6 +8,7 @@ use App\Notifications\BCompleteNotification;
 use App\Notifications\BConfirmNotification;
 use App\Notifications\NewRentalNotification;
 use App\Notifications\WithdrawSuccessNotification;
+use App\Seele\ErrorMessage;
 use App\Seele\Request;
 use App\Seele\Seele;
 use App\Seele\User;
@@ -153,7 +154,9 @@ class HashResult extends Model
         $withdrawRecord->status = $returnData[0] ? WithdrawRecords::STATUS_FAILED : WithdrawRecords::STATUS_SUCCESS;
         $withdrawRecord->save();
 
-        $withdrawRecord->user->notify(new WithdrawSuccessNotification($returnData[0] ? 'withdraw failed' : 'withdraw success'));
+        $withdrawRecord->user->notify(
+            new WithdrawSuccessNotification($returnData[0] ? ErrorMessage::getMessage($returnData[0]) : 'withdraw success')
+        );
     }
 
 }
