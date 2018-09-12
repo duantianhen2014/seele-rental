@@ -24,9 +24,9 @@ class RentalController extends Controller
     public function applyHandler(Request $request, $productId)
     {
         $product = Product::findOrFail($productId);
-        $address = $request->post('address', '');
-        $privateKey = $request->post('private_key', '');
-        $charge = $request->post('charge', 0);
+        $address = $request->input('address', '');
+        $privateKey = $request->input('private_key', '');
+        $charge = $request->input('charge', 0);
 
         if (Auth::user()->hasSubmitRental()) {
             flash()->error('please don\'t repeat submit.');
@@ -73,13 +73,11 @@ class RentalController extends Controller
     {
         $rental = Rental::findOrFail($rentalId);
 
-        $charge = $request->post('charge', 0);
-        $deposit = $request->post('deposit', 0);
-
-        $privateKey = $request->post('private_key', '');
-
-        $agree = $request->post('agree', 0);
-        $rejectReason = $request->post('reject_reason', '');
+        $charge = $request->input('charge', 0);
+        $deposit = $request->input('deposit', 0);
+        $privateKey = $request->input('private_key', '');
+        $agree = $request->input('agree', 0);
+        $rejectReason = $request->input('reject_reason', '');
 
         if ($rental->b_confirm_tx_hash) {
             flash()->error('please don\'t repeat submit.');
@@ -91,26 +89,26 @@ class RentalController extends Controller
             if (!$agree) {
                 $rental->status = Rental::STATUS_REJECT;
                 $rental->reject_reason = $rejectReason;
+            } else {
+                $seele = new Seele(new User($rental->b_address, $privateKey));
+                $data = $seele->bConfirm($rental->a_address, $charge, $deposit, $agree);
+
+                // record
+                HashResult::create([
+                    'user_id' => Auth::id(),
+                    'tx_hash' => $data['Hash'],
+                    'result' => '',
+                    'request_data' => ['row' => $data],
+                    'request_type' => HashResult::REQUEST_TYPE_B_CONFIRM,
+                ]);
+
+                $rental->b_confirm_tx_hash = $data['Hash'];
             }
 
-            $seele = new Seele(new User($rental->b_address, $privateKey));
-            $data = $seele->bConfirm($rental->a_address, $charge, $deposit, $agree);
-
-            // record
-            HashResult::create([
-                'user_id' => Auth::id(),
-                'tx_hash' => $data['Hash'],
-                'result' => '',
-                'request_data' => ['row' => $data],
-                'request_type' => HashResult::REQUEST_TYPE_B_CONFIRM,
-            ]);
-
             $rental->deposit = $deposit;
-            $rental->b_confirm_tx_hash = $data['Hash'];
             $rental->save();
 
             DB::commit();
-
             flash()->success('apply has submit.please wait.');
             return back();
         } catch (Exception $exception) {
@@ -130,10 +128,10 @@ class RentalController extends Controller
     {
         $rental = Rental::findOrFail($rentalId);
 
-        $agree = $request->post('agree', false);
-        $rejectReason = $request->post('reject_reason', '');
-        $address = $request->post('address', '');
-        $privateKey = $request->post('private_key', '');
+        $agree = $request->input('agree', false);
+        $rejectReason = $request->input('reject_reason', '');
+        $address = $request->input('address', '');
+        $privateKey = $request->input('private_key', '');
 
         if ($rental->a_confirm_tx_hash) {
             flash()->error('please don\'t repeat submit.');
@@ -146,22 +144,22 @@ class RentalController extends Controller
                 $rental->status = Rental::STATUS_REJECT;
                 $rental->reject_reason = $rejectReason;
                 $rental->save();
+            } else {
+                $seele = new Seele(new User($address, $privateKey));
+                $data = $seele->aConfirm((bool) $agree);
+
+                // record
+                HashResult::create([
+                    'user_id' => Auth::id(),
+                    'tx_hash' => $data['Hash'],
+                    'result' => '',
+                    'request_data' => ['row' => $data],
+                    'request_type' => HashResult::REQUEST_TYPE_A_CONFIRM,
+                ]);
+
+                $rental->a_confirm_tx_hash = $data['Hash'];
+                $rental->save();
             }
-
-            $seele = new Seele(new User($address, $privateKey));
-            $data = $seele->aConfirm((bool) $agree);
-
-            // record
-            HashResult::create([
-                'user_id' => Auth::id(),
-                'tx_hash' => $data['Hash'],
-                'result' => '',
-                'request_data' => ['row' => $data],
-                'request_type' => HashResult::REQUEST_TYPE_A_CONFIRM,
-            ]);
-
-            $rental->a_confirm_tx_hash = $data['Hash'];
-            $rental->save();
 
             DB::commit();
             flash()->success('apply has submit.please wait.');
@@ -182,7 +180,7 @@ class RentalController extends Controller
     public function aCompleteHandler(Request $request, $rentalId)
     {
         $rental = Rental::findOrFail($rentalId);
-        $privateKey = $request->post('private_key', '');
+        $privateKey = $request->input('private_key', '');
 
         if ($rental->a_complete_apply_tx_hash) {
             flash()->error('please don\'t repeat submit.');
@@ -225,7 +223,7 @@ class RentalController extends Controller
     public function bCompleteHandler(Request $request, $rentalId)
     {
         $rental = Rental::findOrFail($rentalId);
-        $privateKey = $request->post('private_key', '');
+        $privateKey = $request->input('private_key', '');
 
         if ($rental->b_complete_tx_hash) {
             flash()->error('please don\'t repeat submit.');
