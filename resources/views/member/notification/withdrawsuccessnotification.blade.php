@@ -1,1 +1,1 @@
-Withdraw success.
+{{$notification->data['message']}}.

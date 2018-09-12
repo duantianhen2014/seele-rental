@@ -52,7 +52,6 @@ class HashQueryJob implements ShouldQueue
                 Rental::removeHash($this->hashResult);
 
                 $this->hashResult->user->notify(new ErrorMessageNotification($this->hashResult->request_type, $code));
-
             } else {
                 $this->hashResult->result = json_encode($result);
                 $this->hashResult->save();

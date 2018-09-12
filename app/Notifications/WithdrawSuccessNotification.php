@@ -11,14 +11,16 @@ class WithdrawSuccessNotification extends Notification
 {
     use Queueable;
 
+    public $message;
+
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($message)
     {
-        //
+        $this->message = $message;
     }
 
     /**
@@ -55,7 +57,7 @@ class WithdrawSuccessNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            //
+            'message' => $this->message,
         ];
     }
 }

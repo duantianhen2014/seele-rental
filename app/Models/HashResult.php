@@ -8,6 +8,7 @@ use App\Notifications\BCompleteNotification;
 use App\Notifications\BConfirmNotification;
 use App\Notifications\NewRentalNotification;
 use App\Notifications\WithdrawSuccessNotification;
+use App\Seele\Request;
 use App\Seele\Seele;
 use App\Seele\User;
 use Exception;
@@ -144,10 +145,13 @@ class HashResult extends Model
         if (!$withdrawRecord) {
             return;
         }
-        $withdrawRecord->status = WithdrawRecords::STATUS_SUCCESS;
+        $returnData = json_decode($this->result, true);
+        $returnData = (new Request)->payloadDecode($returnData['result']);
+
+        $withdrawRecord->status = $returnData[0] ? WithdrawRecords::STATUS_SUCCESS : WithdrawRecords::STATUS_FAILED;
         $withdrawRecord->save();
 
-        $withdrawRecord->user->notify(new WithdrawSuccessNotification());
+        $withdrawRecord->user->notify(new WithdrawSuccessNotification($returnData[0] ? 'withdraw success' : 'withdraw error'));
     }
 
 }
