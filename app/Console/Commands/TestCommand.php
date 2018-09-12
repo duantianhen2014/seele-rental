@@ -48,7 +48,7 @@ class TestCommand extends Command
 //        $seele = new Seele($user);
 //        var_dump($seele->queryBalance());
 
-        $result = (new Request)->payloadDecode('0x0000000000000000000000000000000000000000000000000000000000000000');
+        $result = (new Request)->payloadDecode('0x00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000');
         $result = array_map('hexdec', $result);
         dd($result);
     }

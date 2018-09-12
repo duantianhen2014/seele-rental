@@ -44,10 +44,10 @@ class HashQueryJob implements ShouldQueue
             Log::info($result);
             $returnData = (new Request)->payloadDecode($result['result']);
             $returnData = array_map('hexdec', $returnData);
-            $isError = $returnData[0];
+            $isSuccess = $returnData[0];
             $code = optional($returnData)[1] ?? 0;
 
-            if ($isError) {
+            if (!$isSuccess) {
                 $this->hashResult->result = json_encode($result);
                 $this->hashResult->save();
                 Rental::removeHash($this->hashResult);
