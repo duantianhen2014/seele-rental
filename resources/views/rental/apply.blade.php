@@ -14,10 +14,6 @@
                         <input type="text" value="{{$product->title}}" class="form-control" readonly>
                     </div>
                     <div class="form-group">
-                        <label>Address</label>
-                        <input type="text" name="address" class="form-control" placeholder="Address" required>
-                    </div>
-                    <div class="form-group">
                         <label>PrivateKey</label>
                         <input type="text" name="private_key" class="form-control" placeholder="PrivateKey" required>
                     </div>

@@ -30,7 +30,6 @@ class RentalController extends Controller
     public function applyHandler(Request $request, $productId)
     {
         $product = Product::findOrFail($productId);
-        $address = $request->input('address', '');
         $privateKey = $request->input('private_key', '');
         $charge = $request->input('charge', 0);
 
@@ -45,7 +44,7 @@ class RentalController extends Controller
         }
 
         try {
-            $seele = new Seele(new User($address, $privateKey));
+            $seele = new Seele(new User('', $privateKey));
             $data = $seele->apply($product->address, $charge);
 
             // record
