@@ -150,10 +150,10 @@ class HashResult extends Model
         $returnData = (new Request)->payloadDecode($returnData['result']);
         $returnData = array_map('hexdec', $returnData);
 
-        $withdrawRecord->status = $returnData[0] ? WithdrawRecords::STATUS_SUCCESS : WithdrawRecords::STATUS_FAILED;
+        $withdrawRecord->status = $returnData[0] ? WithdrawRecords::STATUS_FAILED : WithdrawRecords::STATUS_SUCCESS;
         $withdrawRecord->save();
 
-        $withdrawRecord->user->notify(new WithdrawSuccessNotification($returnData[0] ? 'withdraw success' : 'withdraw error'));
+        $withdrawRecord->user->notify(new WithdrawSuccessNotification($returnData[0] ? 'withdraw failed' : 'withdraw success'));
     }
 
 }
