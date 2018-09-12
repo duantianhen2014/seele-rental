@@ -15,6 +15,12 @@ use Illuminate\Support\Facades\DB;
 class RentalController extends Controller
 {
 
+    public function show($id)
+    {
+        $rental = Rental::findOrFail($id);
+        return view('rental.show', compact('rental'));
+    }
+
     public function showApplyPage($productId)
     {
         $product = Product::findOrFail($productId);

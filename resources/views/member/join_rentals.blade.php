@@ -42,6 +42,8 @@
                     @elseif($rental->status == \App\Models\Rental::STATUS_REJECT)
                     <span>Reject.Reason:{{$rental->reject_reason}}</span>
                     @endif
+
+                    <a href="{{route('rental.show', $rental)}}">Information</a>
                 </td>
             </tr>
         @empty

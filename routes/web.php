@@ -53,4 +53,6 @@ Route::group(['prefix' => '/member', 'middleware' => ['auth']], function () {
 
     Route::get('/rentals', 'MemberController@rentals')->name('member.rentals');
     Route::get('/join_rentals', 'MemberController@joinRentals')->name('member.join_rentals');
+
+    Route::get('/rental/{id}', 'MemberController@show')->name('rental.show');
 });
