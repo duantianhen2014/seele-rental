@@ -43,6 +43,7 @@ class HashQueryJob implements ShouldQueue
             $result = (new Request)->queryHash($this->hashResult->tx_hash);
             Log::info($result);
             $returnData = (new Request)->payloadDecode($result['result']);
+            $returnData = array_map('hexdec', $returnData);
             $isSuccess = $returnData[0];
             $code = optional($returnData)[1] ?? 0;
 

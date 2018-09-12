@@ -147,6 +147,7 @@ class HashResult extends Model
         }
         $returnData = json_decode($this->result, true);
         $returnData = (new Request)->payloadDecode($returnData['result']);
+        $returnData = array_map('hexdec', $returnData);
 
         $withdrawRecord->status = $returnData[0] ? WithdrawRecords::STATUS_SUCCESS : WithdrawRecords::STATUS_FAILED;
         $withdrawRecord->save();
