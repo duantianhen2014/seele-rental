@@ -55,8 +55,9 @@ class MemberController extends Controller
 
             // Create Record
             Auth::user()->withdrawRecords()->save(new WithdrawRecords([
-                'before_balance' => 0,
+                'before_balance' => $balance,
                 'money' => $money,
+                'address' => $address,
                 'status' => WithdrawRecords::STATUS_SUBMIT,
                 'tx_hash' => $data['Hash'],
             ]));
