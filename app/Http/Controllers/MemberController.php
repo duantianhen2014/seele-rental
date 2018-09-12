@@ -47,6 +47,7 @@ class MemberController extends Controller
 
             // Hash record
             HashResult::create([
+                'user_id' => Auth::id(),
                 'tx_hash' => $data['Hash'],
                 'result' => '',
                 'request_data' => ['row' => $data],
