@@ -116,7 +116,7 @@ class RentalController extends Controller
 
             DB::commit();
             flash()->success('apply has submit.please wait.');
-            return back();
+            return redirect(route('rental.show', $rental));
         } catch (Exception $exception) {
             DB::rollBack();
             flash()->error($exception->getMessage());
@@ -169,7 +169,7 @@ class RentalController extends Controller
 
             DB::commit();
             flash()->success('apply has submit.please wait.');
-            return back();
+            return redirect(route('rental.show', $rental));
         } catch (Exception $exception) {
             DB::rollBack();
             flash()->error($exception->getMessage());
@@ -212,7 +212,7 @@ class RentalController extends Controller
 
             DB::commit();
             flash()->success('apply has submit.please wait.');
-            return back();
+            return redirect(route('rental.show', $rental));
         } catch (Exception $exception) {
             DB::rollBack();
             flash()->error($exception->getMessage());
@@ -255,7 +255,7 @@ class RentalController extends Controller
 
             DB::commit();
             flash()->success('apply has submit.please wait.');
-            return back();
+            return redirect(route('rental.show', $rental));
         } catch (Exception $exception) {
             DB::rollBack();
             flash()->error($exception->getMessage());

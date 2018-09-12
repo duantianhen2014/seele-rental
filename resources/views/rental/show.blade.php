@@ -4,7 +4,7 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-sm-4 col-sm-offset-4">
+            <div class="col-sm-8 col-sm-offset-2">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <p class="text-center">Rental Information</p>
