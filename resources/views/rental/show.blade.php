@@ -16,19 +16,19 @@
                         <p>Deposit Money: {{$rental->deposit}} seele</p>
                         <p>Status: {{$rental->statusText()}}</p>
                         @if($rental->a_apply_tx_hash)
-                        <p>{{$rental->a_apply_tx_hash}}</p>
+                            <p>A Apply Hash:{{$rental->a_apply_tx_hash}}</p>
                         @endif
                         @if($rental->b_confirm_tx_hash)
-                            <p>{{$rental->b_confirm_tx_hash}}</p>
+                            <p>B Confirm Hash:{{$rental->b_confirm_tx_hash}}</p>
                         @endif
                         @if($rental->a_confirm_tx_hash)
-                            <p>{{$rental->a_confirm_tx_hash}}</p>
+                            <p>A Confirm Hash:{{$rental->a_confirm_tx_hash}}</p>
                         @endif
                         @if($rental->a_complete_apply_tx_hash)
-                            <p>{{$rental->a_complete_apply_tx_hash}}</p>
+                            <p>A Complete Hash:{{$rental->a_complete_apply_tx_hash}}</p>
                         @endif
                         @if($rental->b_complete_tx_hash)
-                            <p>{{$rental->b_complete_tx_hash}}</p>
+                            <p>B Complete Hash:{{$rental->b_complete_tx_hash}}</p>
                         @endif
 
                         @if($rental->product->user_id == Auth::id())
