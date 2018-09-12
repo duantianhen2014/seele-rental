@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Notifications\ErrorMessageNotification;
 use Exception;
 use App\Models\HashResult;
 use App\Models\Rental;
@@ -41,11 +42,17 @@ class HashQueryJob implements ShouldQueue
         try {
             $result = (new Request)->queryHash($this->hashResult->tx_hash);
             Log::info($result);
+            $returnData = (new Request)->payloadDecode($result['result']);
+            $isSuccess = $returnData[0];
+            $code = optional($returnData)[1] ?? 0;
 
-            if (isset($result['code'])) {
+            if (!$isSuccess) {
                 $this->hashResult->result = json_encode($result);
                 $this->hashResult->save();
                 Rental::removeHash($this->hashResult);
+
+                $this->hashResult->user->notify(new ErrorMessageNotification($this->hashResult->request_type, $code));
+
             } else {
                 $this->hashResult->result = json_encode($result);
                 $this->hashResult->save();

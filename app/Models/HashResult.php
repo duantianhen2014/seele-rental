@@ -34,6 +34,11 @@ class HashResult extends Model
         'tx_hash', 'result', 'request_data', 'request_type', 'user_id',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function handlerApply()
     {
         $data = $this->request_data;

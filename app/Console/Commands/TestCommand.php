@@ -45,7 +45,6 @@ class TestCommand extends Command
         );
 
         $seele = new Seele($user);
-        var_dump($seele->apply('0x038d4a24162145a459be86b268e9b9e70a3b5691', 1));
-        var_dump($seele->queryContract());
+        var_dump($seele->queryBalance());
     }
 }

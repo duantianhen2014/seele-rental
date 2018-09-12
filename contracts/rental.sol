@@ -26,11 +26,6 @@ contract SeeleRental {
         _;
     }
 
-    modifier inputNumberCheck(uint money) {
-        require(money < balances[msg.sender], "max balance");
-        _;
-    }
-
     function() public payable {
         balances[msg.sender] += msg.value;
     }
@@ -48,25 +43,47 @@ contract SeeleRental {
         aCompleteConfirm = records[queryAddress].aCompleteConfirm;
     }
 
-    function withdraw(uint money) public inputNumberCheck(money) {
-        require(records[msg.sender].aConfirm == false, "has rental record");
+    function withdraw(uint money) public returns (bool result, uint code) {
+        if (money > balances[msg.sender]) {
+            result = false;
+            code = 1;
+            return;
+        }
+        if (records[msg.sender].aConfirm != false) {
+            result = false;
+            code = 10;
+            return;
+        }
         balances[msg.sender] -= money;
         msg.sender.transfer(money);
+        result = true;
+        code = 0;
     }
 
-    function aApply(address bAddress, uint charge) public {
-        require(records[msg.sender].aConfirm == false, "has rental record");
-        records[msg.sender].rentalOwner = bAddress;
-        records[msg.sender].deposit = 0;
-        records[msg.sender].charge = charge;
-        records[msg.sender].aConfirm = false;
-        records[msg.sender].bConfirm = false;
-        records[msg.sender].aCompleteConfirm = false;
+    function aApply(address bAddress, uint charge) public returns (bool result) {
+        if (records[msg.sender].aConfirm != false) {
+            result = false;
+        } else {
+            records[msg.sender].rentalOwner = bAddress;
+            records[msg.sender].deposit = 0;
+            records[msg.sender].charge = charge;
+            records[msg.sender].aConfirm = false;
+            records[msg.sender].bConfirm = false;
+            records[msg.sender].aCompleteConfirm = false;
+        }
     }
 
-    function bConfirm(address aAddress, uint charge, uint deposit, bool isAgree) public {
-        require(records[aAddress].rentalOwner == msg.sender, "no auth");
-        require(records[aAddress].bConfirm == false, "repeat action");
+    function bConfirm(address aAddress, uint charge, uint deposit, bool isAgree) public returns (bool result, uint code) {
+        if (records[aAddress].rentalOwner != msg.sender) {
+            result = false;
+            code = 1;
+            return;
+        }
+        if (records[aAddress].bConfirm != false) {
+            result = false;
+            code = 10;
+            return;
+        }
         if (isAgree == true) {
             records[aAddress].bConfirm = isAgree;
             records[aAddress].deposit = deposit;
@@ -80,10 +97,16 @@ contract SeeleRental {
             records[aAddress].bConfirm = false;
             records[aAddress].aCompleteConfirm = false;
         }
+        result = true;
+        code = 0;
     }
 
-    function aConfirm(bool isAgree) public {
-        require(records[msg.sender].bConfirm == true, "error2");
+    function aConfirm(bool isAgree) public returns (bool result, uint code) {
+        if (records[msg.sender].bConfirm != true) {
+            result = false;
+            code = 1;
+            return;
+        }
         if (balances[msg.sender] < (records[msg.sender].deposit + records[msg.sender].charge)) {
             isAgree = false;
         }
@@ -96,16 +119,32 @@ contract SeeleRental {
             records[msg.sender].bConfirm = false;
             records[msg.sender].aCompleteConfirm = false;
         }
+        result = true;
+        code = 0;
     }
 
-    function aComplete() public {
-        require(records[msg.sender].aConfirm == true && records[msg.sender].bConfirm == true, "no effective rental");
+    function aComplete() public returns (bool result, uint code) {
+        if (records[msg.sender].aConfirm != true || records[msg.sender].bConfirm != true) {
+            result = false;
+            code = 0;
+            return;
+        }
         records[msg.sender].aCompleteConfirm = true;
+        result = true;
+        code = 0;
     }
 
-    function bComplete(address aAddress) public {
-        require(records[aAddress].rentalOwner == msg.sender, 'no auth');
-        require(records[aAddress].aCompleteConfirm == true, "a no agree");
+    function bComplete(address aAddress) public returns (bool result, uint code) {
+        if (records[aAddress].rentalOwner != msg.sender) {
+            result = false;
+            code = 1;
+            return;
+        }
+        if (records[aAddress].aCompleteConfirm != true) {
+            result = false;
+            code = 10;
+            return;
+        }
         // 增加b的余额
         balances[msg.sender] += records[aAddress].charge;
         balances[aAddress] -= records[aAddress].charge;
@@ -117,6 +156,9 @@ contract SeeleRental {
         records[aAddress].aConfirm = false;
         records[aAddress].bConfirm = false;
         records[aAddress].aCompleteConfirm = false;
+
+        result = true;
+        code = 0;
     }
 
     function arbitrate(address aAddress, address bAddress, uint giveB) public ownerCheck {
