@@ -43,26 +43,23 @@ contract SeeleRental {
         aCompleteConfirm = records[queryAddress].aCompleteConfirm;
     }
 
-    function withdraw(uint money) public returns (bool result, uint code) {
+    function withdraw(uint money) public returns (uint code) {
         if (money > balances[msg.sender]) {
-            result = false;
-            code = 1;
+            code = 10001;
             return;
         }
         if (records[msg.sender].aConfirm != false) {
-            result = false;
-            code = 10;
+            code = 10005;
             return;
         }
         balances[msg.sender] -= money;
         msg.sender.transfer(money);
-        result = true;
         code = 0;
     }
 
-    function aApply(address bAddress, uint charge) public returns (bool result) {
+    function aApply(address bAddress, uint charge) public returns (uint code) {
         if (records[msg.sender].aConfirm != false) {
-            result = false;
+            code = 20001;
         } else {
             records[msg.sender].rentalOwner = bAddress;
             records[msg.sender].deposit = 0;
@@ -70,18 +67,17 @@ contract SeeleRental {
             records[msg.sender].aConfirm = false;
             records[msg.sender].bConfirm = false;
             records[msg.sender].aCompleteConfirm = false;
+            code = 0;
         }
     }
 
-    function bConfirm(address aAddress, uint charge, uint deposit, bool isAgree) public returns (bool result, uint code) {
+    function bConfirm(address aAddress, uint charge, uint deposit, bool isAgree) public returns (uint code) {
         if (records[aAddress].rentalOwner != msg.sender) {
-            result = false;
-            code = 1;
+            code = 30001;
             return;
         }
         if (records[aAddress].bConfirm != false) {
-            result = false;
-            code = 10;
+            code = 30005;
             return;
         }
         if (isAgree == true) {
@@ -97,14 +93,12 @@ contract SeeleRental {
             records[aAddress].bConfirm = false;
             records[aAddress].aCompleteConfirm = false;
         }
-        result = true;
         code = 0;
     }
 
-    function aConfirm(bool isAgree) public returns (bool result, uint code) {
+    function aConfirm(bool isAgree) public returns (uint code) {
         if (records[msg.sender].bConfirm != true) {
-            result = false;
-            code = 1;
+            code = 40001;
             return;
         }
         if (balances[msg.sender] < (records[msg.sender].deposit + records[msg.sender].charge)) {
@@ -119,30 +113,25 @@ contract SeeleRental {
             records[msg.sender].bConfirm = false;
             records[msg.sender].aCompleteConfirm = false;
         }
-        result = true;
         code = 0;
     }
 
-    function aComplete() public returns (bool result, uint code) {
+    function aComplete() public returns (uint code) {
         if (records[msg.sender].aConfirm != true || records[msg.sender].bConfirm != true) {
-            result = false;
-            code = 0;
+            code = 50001;
             return;
         }
         records[msg.sender].aCompleteConfirm = true;
-        result = true;
         code = 0;
     }
 
-    function bComplete(address aAddress) public returns (bool result, uint code) {
+    function bComplete(address aAddress) public returns (uint code) {
         if (records[aAddress].rentalOwner != msg.sender) {
-            result = false;
-            code = 1;
+            code = 60001;
             return;
         }
         if (records[aAddress].aCompleteConfirm != true) {
-            result = false;
-            code = 10;
+            code = 60005;
             return;
         }
         // 增加b的余额
@@ -156,8 +145,6 @@ contract SeeleRental {
         records[aAddress].aConfirm = false;
         records[aAddress].bConfirm = false;
         records[aAddress].aCompleteConfirm = false;
-
-        result = true;
         code = 0;
     }
 

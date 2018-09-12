@@ -1,17 +1,17 @@
 {
     "Creation": {
-        "codeDepositCost": "535800",
-        "executionCost": "20860",
-        "totalCost": "556660"
+        "codeDepositCost": "517200",
+        "executionCost": "20841",
+        "totalCost": "538041"
     },
     "External": {
         "": "20606",
-        "aApply(address,uint256)": "66231",
-        "aComplete()": "21423",
-        "aConfirm(bool)": "31733",
+        "aApply(address,uint256)": "66224",
+        "aComplete()": "21370",
+        "aConfirm(bool)": "31689",
         "arbitrate(address,address,uint256)": "92744",
-        "bComplete(address)": "92777",
-        "bConfirm(address,uint256,uint256,bool)": "61772",
+        "bComplete(address)": "92733",
+        "bConfirm(address,uint256,uint256,bool)": "61725",
         "balances(address)": "597",
         "owner()": "691",
         "queryBalance(address)": "716",
