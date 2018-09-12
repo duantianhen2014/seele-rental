@@ -14,6 +14,7 @@ use App\Seele\User;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
+use App\User AS UserModel;
 
 class HashResult extends Model
 {
@@ -37,7 +38,7 @@ class HashResult extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(UserModel::class, 'user_id');
     }
 
     public function handlerApply()
