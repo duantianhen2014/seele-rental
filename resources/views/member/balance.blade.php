@@ -34,8 +34,9 @@
         <th>ID</th>
         <th>Withdraw Money</th>
         <th>Status</th>
-        <th>CreatedAt</th>
-        <th>UpdatedAt</th>
+        <th>Address</th>
+        <th>SubmitAt</th>
+        <th>HandlerAt</th>
         </thead>
         <tbody>
         @forelse($withdrawRecords as $record)
@@ -43,12 +44,13 @@
                 <td>{{$record->id}}</td>
                 <td>{{$record->money}} seele</td>
                 <td>{{$record->statusText()}}</td>
+                <td>{{$record->address}}</td>
                 <td>{{$record->created_at}}</td>
                 <td>{{$record->updated_at}}</td>
             </tr>
             @empty
             <tr>
-                <td colspan="4" class="text-center">None.</td>
+                <td colspan="5" class="text-center">None.</td>
             </tr>
         @endforelse
         </tbody>

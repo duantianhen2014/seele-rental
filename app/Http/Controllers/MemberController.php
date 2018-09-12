@@ -34,6 +34,12 @@ class MemberController extends Controller
             return back();
         }
 
+        $balance = (new Seele(new User($address, '')))->queryBalance();
+        if ($money > $balance) {
+            flash()->error('insufficient balance.');
+            return back();
+        }
+
         DB::beginTransaction();
         try {
             $seele = new Seele(new User($address, $privateKey));
